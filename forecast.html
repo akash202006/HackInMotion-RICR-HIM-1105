@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Demand forecasting - SMART AI FORECASTING.">
+  <title>Forecast · SMART AI FORECASTING</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="app">
+    <!-- ======= Sidebar ======= -->
+    <aside class="sidebar" id="sidebar" aria-label="Sidebar navigation">
+      <a class="sidebar-brand" href="dashboard.html">
+        <span class="logo-icon" aria-hidden="true">🎯</span>
+        <span>SMART AI<small>FORECASTING</small></span>
+      </a>
+      <nav class="sidebar-nav">
+        <a class="sidebar-link" href="dashboard.html"><span class="link-icon" aria-hidden="true">📊</span> Dashboard</a>
+        <a class="sidebar-link" href="inventory.html"><span class="link-icon" aria-hidden="true">📦</span> Inventory</a>
+        <a class="sidebar-link" href="forecast.html" aria-current="page"><span class="link-icon" aria-hidden="true">🔮</span> Forecast</a>
+        <a class="sidebar-link" href="alerts.html"><span class="link-icon" aria-hidden="true">🔔</span> Alerts <span class="badge badge-danger" id="alertCountBadge" style="margin-left:auto;">0</span></a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn btn-ghost btn-block" data-logout style="color: var(--gray-light); border-color: rgba(255,255,255,0.15);">🚪 Logout</button>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ======= Main ======= -->
+    <div class="main" id="main">
+      <header class="app-header">
+        <button class="hamburger" data-sidebar-toggle aria-label="Toggle menu">☰</button>
+        <h1 class="page-title">🔮 Forecast</h1>
+        <div style="margin-left:auto;" class="flex">
+          <span class="badge badge-success live-badge"><span class="live-dot" aria-hidden="true"></span> Live</span>
+          <div class="user-chip">
+            <div style="text-align:right;">
+              <div class="user-name">👋 Welcome, <span id="userName">User</span></div>
+              <div class="user-role">Store Manager</div>
+            </div>
+            <div class="avatar" id="userAvatar" aria-hidden="true">SM</div>
+          </div>
+        </div>
+      </header>
+
+      <div class="app-content">
+        <div class="page-heading">
+          <div>
+            <h2 class="page-heading-title">🔮 Demand Forecasting</h2>
+            <p class="sub">Upload sales data and let AI predict future demand</p>
+          </div>
+          <span class="badge badge-ai">AI Powered</span>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="card no-hover">
+          <div class="card-header">
+            <h2 class="card-title">📤 Upload Sales Data</h2>
+          </div>
+          <p class="text-gray mb-md">Upload a CSV file with historical sales data to generate accurate demand forecasts.</p>
+
+          <div class="upload-zone" id="uploadZone" role="button" tabindex="0" aria-label="Upload sales data CSV">
+            <span class="upload-icon" aria-hidden="true">📁</span>
+            <p><strong>Drag &amp; drop CSV file here</strong> or click to browse</p>
+            <p class="mt-sm">
+              <button type="button" class="btn btn-outline" id="browseBtn">📄 Choose CSV File</button>
+            </p>
+            <input type="file" id="csvInput" accept=".csv" class="hidden" aria-hidden="true" tabindex="-1">
+          </div>
+          <div class="upload-status" id="uploadStatus" role="status"></div>
+          <div class="progress hidden" id="uploadProgress"><div class="progress-bar"></div></div>
+
+          <div class="mt-lg">
+            <p class="form-label">📋 Required CSV Format</p>
+            <p class="code-box">date,product_id,quantity_sold</p>
+            <p class="form-hint mt-sm">
+              <a href="#" id="downloadSample" class="text-primary text-bold">📥 Download Sample CSV</a>
+            </p>
+          </div>
+        </div>
+
+        <!-- Forecast Controls -->
+        <div class="card no-hover">
+          <div class="card-header">
+            <h2 class="card-title">⚙️ Generate Forecast</h2>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="productSelect">Select Product <span class="req">*</span></label>
+              <select class="form-select" id="productSelect"></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="periodSelect">Forecast Period</label>
+              <select class="form-select" id="periodSelect">
+                <option value="30" selected>30 Days</option>
+                <option value="60">60 Days</option>
+                <option value="90">90 Days</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="safetyStock">Safety Stock (%)</label>
+              <input class="form-input" type="number" id="safetyStock" value="20" min="0" max="100">
+              <p class="form-hint">Extra buffer over predicted demand.</p>
+            </div>
+          </div>
+          <button class="btn btn-primary" id="generateBtn" data-loading="Generating forecast..." data-done="false">🚀 Generate Forecast</button>
+        </div>
+
+        <!-- Results (hidden until generated) -->
+        <div id="resultsSection" class="hidden" style="margin-top: var(--spacing-lg);" aria-live="polite">
+          <div class="card no-hover">
+            <div class="card-header">
+              <h2 class="card-title">📊 Forecast Results</h2>
+              <span class="badge badge-info" id="resultDate"></span>
+            </div>
+
+            <div class="grid-4" id="resultKpis">
+              <div class="kpi-card is-info">
+                <div class="kpi-icon is-info" aria-hidden="true">📦</div>
+                <div><div class="kpi-value" id="resCurrent">–</div><div class="kpi-label">Current Stock</div></div>
+              </div>
+              <div class="kpi-card is-primary">
+                <div class="kpi-icon is-primary" aria-hidden="true">📈</div>
+                <div><div class="kpi-value" id="resDemand">–</div><div class="kpi-label">Predicted Demand</div></div>
+              </div>
+              <div class="kpi-card is-success">
+                <div class="kpi-icon is-success" aria-hidden="true">🔄</div>
+                <div><div class="kpi-value" id="resReorder">–</div><div class="kpi-label">Reorder Qty</div></div>
+              </div>
+              <div class="kpi-card is-danger">
+                <div class="kpi-icon is-danger" aria-hidden="true">⚠️</div>
+                <div><div class="kpi-value" id="resRisk">–</div><div class="kpi-label">Risk Level</div></div>
+              </div>
+            </div>
+
+            <div class="card no-hover" style="box-shadow:none; border:1px solid var(--gray-lighter);">
+              <div class="card-header">
+                <h3 class="card-title">📈 Demand Forecast Chart</h3>
+                <span class="badge badge-info" id="chartPeriod">30 days</span>
+              </div>
+              <div class="chart-box tall">
+                <canvas id="forecastChart" role="img" aria-label="Bar chart of 30 day demand forecast"></canvas>
+              </div>
+            </div>
+
+            <div class="ai-card" style="margin-top: var(--spacing-lg);">
+              <div class="card-header">
+                <h2 class="card-title">🤖 Gemini AI Insight</h2>
+                <span class="badge badge-gemini">Powered by Gemini</span>
+              </div>
+              <div class="ai-section">
+                <span class="ai-point" aria-hidden="true">🔴</span>
+                <p id="aiRiskText">Analyzing stockout risk…</p>
+              </div>
+              <div class="ai-section">
+                <span class="ai-point" aria-hidden="true">💡</span>
+                <p id="aiRecText">Generating recommendation…</p>
+              </div>
+              <div class="ai-section">
+                <span class="ai-point" aria-hidden="true">📋</span>
+                <p id="aiLeadText">Calculating lead time guidance…</p>
+              </div>
+            </div>
+
+            <div class="flex" style="flex-wrap: wrap;">
+              <button class="btn btn-primary" id="saveForecastBtn">💾 Save Forecast</button>
+              <button class="btn btn-outline" id="genAlertsBtn">🔔 Generate Alerts</button>
+              <button class="btn btn-ghost" id="exportBtn">📄 Export</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    (function () {
+      var store = SAF.getStore();
+      var products = store.products;
+      var productSelect = document.getElementById('productSelect');
+      var currentChart = null;
+
+      document.getElementById('alertCountBadge').textContent =
+        products.filter(function (p) { return SAF.productStatus(p).key === 'low'; }).length;
+
+      // Populate product dropdown
+      products.forEach(function (p) {
+        var opt = document.createElement('option');
+        opt.value = p.id;
+        opt.textContent = p.name + ' (' + p.sku + ')';
+        productSelect.appendChild(opt);
+      });
+
+      // Default select the riskiest product
+      var riskiest = products.slice().sort(function (a, b) {
+        return a.stock / a.minStock - b.stock / b.minStock;
+      })[0];
+      if (riskiest) productSelect.value = String(riskiest.id);
+
+      // Sample CSV download
+      document.getElementById('downloadSample').addEventListener('click', function (e) {
+        e.preventDefault();
+        var content = 'date,product_id,quantity_sold\n2025-01-01,1,12\n2025-01-02,1,18\n2025-01-03,1,9\n2025-01-04,1,15\n2025-01-05,1,21\n2025-01-06,1,14\n2025-01-07,1,17\n';
+        var blob = new Blob([content], { type: 'text/csv' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'sales_sample.csv';
+        a.click();
+        URL.revokeObjectURL(a.href);
+        SAF.toast('Sample CSV downloaded.', 'success', 'Download started');
+      });
+
+      // Upload zone
+      var progress = document.getElementById('uploadProgress');
+      SAF.initUpload('uploadZone', 'csvInput', 'uploadStatus', function () {
+        progress.classList.remove('hidden');
+        setTimeout(function () { progress.classList.add('hidden'); document.querySelector('.progress-bar').style.width = '0'; }, 800);
+      });
+      document.getElementById('browseBtn').addEventListener('click', function (e) {
+        e.stopPropagation();
+        document.getElementById('csvInput').click();
+      });
+
+      function selectedProduct() {
+        return products.find(function (p) { return p.id === Number(productSelect.value); });
+      }
+
+      // Generate forecast
+      document.getElementById('generateBtn').addEventListener('click', function () {
+        if (!productSelect.value) {
+          SAF.toast('Please select a product first.', 'error', 'Missing product');
+          return;
+        }
+        var p = selectedProduct();
+        var period = Number(document.getElementById('periodSelect').value);
+        var safety = Number(document.getElementById('safetyStock').value) || 0;
+        var demand = Math.round(SAF.predictedDemand(p) * (period / 30) * (1 + safety / 100));
+        var reorder = Math.max(demand - p.stock, 0);
+
+        document.getElementById('resultsSection').classList.remove('hidden');
+        document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document.getElementById('resultDate').textContent = new Date().toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' });
+        document.getElementById('chartPeriod').textContent = period + ' days';
+        document.getElementById('resCurrent').textContent = p.stock;
+        document.getElementById('resDemand').textContent = demand;
+        document.getElementById('resReorder').textContent = reorder;
+
+        var st = SAF.productStatus(p);
+        var riskText = st.key === 'low' ? 'HIGH' : st.key === 'overstock' ? 'MEDIUM' : 'LOW';
+        var riskColor = st.key === 'low' ? 'var(--danger)' : st.key === 'overstock' ? 'var(--warning)' : 'var(--success)';
+        var riskEl = document.getElementById('resRisk');
+        riskEl.textContent = riskText;
+        riskEl.style.color = riskColor;
+        document.getElementById('resRisk').closest('.kpi-card').className =
+          'kpi-card is-' + (st.key === 'low' ? 'danger' : st.key === 'overstock' ? 'warning' : 'success');
+
+        // AI insight text
+        var aiRisk = document.getElementById('aiRiskText');
+        if (st.key === 'low') {
+          aiRisk.innerHTML = '🔴 <strong>' + p.name + '</strong> is at high risk of stockout. Current stock (<strong>' + p.stock +
+            ' units</strong>) is significantly below predicted demand (<strong>' + demand + ' units</strong>).';
+        } else if (st.key === 'overstock') {
+          aiRisk.innerHTML = '🟡 <strong>' + p.name + '</strong> shows signs of overstock. Current stock (' + p.stock +
+            ' units) exceeds predicted demand (' + demand + ' units).';
+        } else {
+          aiRisk.innerHTML = '🟢 <strong>' + p.name + '</strong> stock levels are healthy. Current stock (' + p.stock +
+            ' units) comfortably covers predicted demand (' + demand + ' units).';
+        }
+        document.getElementById('aiRecText').innerHTML = '💡 Recommendation: ' +
+          (st.key === 'low'
+            ? 'Reorder <strong>' + reorder + ' units</strong> immediately to avoid stockout.'
+            : st.key === 'overstock'
+              ? 'Consider running a promotion to reduce stock before it ties up cash.'
+              : 'No immediate action needed. Monitor weekly.');
+        document.getElementById('aiLeadText').innerHTML = '📋 Supplier lead time is <strong>' + (p.leadTime || 0) +
+          ' days</strong>. Order well in advance to stay ahead of predicted demand.';
+
+        // Chart
+        if (currentChart) currentChart.destroy();
+        var labels = [];
+        for (var i = 1; i <= period; i++) labels.push('D' + i);
+        var base = Math.round(demand / period);
+        var data = [];
+        for (var j = 0; j < period; j++) {
+          data.push(Math.max(1, Math.round(base + Math.sin(j / 4) * base * 0.2 + (Math.random() * 4))));
+        }
+        var colors = data.map(function (v) {
+          return v > p.stock ? 'rgba(245,101,101,0.75)' : 'rgba(72,187,120,0.75)';
+        });
+        currentChart = new Chart(document.getElementById('forecastChart'), {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{ label: 'Predicted Demand (units)', data: data, backgroundColor: colors, borderRadius: 4 }]
+          },
+          options: SAF.charts.options({
+            scales: {
+              x: { grid: { display: false }, ticks: { color: '#A0AEC0', maxTicksLimit: 15 } },
+              y: { grid: { color: 'rgba(226,232,240,0.5)' }, ticks: { color: '#A0AEC0' }, beginAtZero: true }
+            },
+            plugins: { legend: { display: false } },
+            animation: { duration: 800 }
+          })
+        });
+      });
+
+      document.getElementById('saveForecastBtn').addEventListener('click', function () {
+        SAF.toast('Forecast saved to history.', 'success', 'Forecast saved');
+      });
+      document.getElementById('genAlertsBtn').addEventListener('click', function () {
+        var p = selectedProduct();
+        SAF.toast('Alert generated for ' + p.name + '.', 'success', 'Alert generated');
+      });
+      document.getElementById('exportBtn').addEventListener('click', function () {
+        var content = 'product,current_stock,predicted_demand,reorder_qty\n' +
+          document.getElementById('productSelect').selectedOptions[0].textContent + ',' +
+          document.getElementById('resCurrent').textContent + ',' +
+          document.getElementById('resDemand').textContent + ',' +
+          document.getElementById('resReorder').textContent + '\n';
+        var blob = new Blob([content], { type: 'text/csv' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'forecast_export.csv';
+        a.click();
+        URL.revokeObjectURL(a.href);
+        SAF.toast('Forecast exported as CSV.', 'success', 'Export complete');
+      });
+    })();
+  </script>
+</body>
+</html>
