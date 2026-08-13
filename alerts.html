@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Alerts & recommendations - SMART AI FORECASTING.">
+  <title>Alerts · SMART AI FORECASTING</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="app">
+    <!-- ======= Sidebar ======= -->
+    <aside class="sidebar" id="sidebar" aria-label="Sidebar navigation">
+      <a class="sidebar-brand" href="dashboard.html">
+        <span class="logo-icon" aria-hidden="true">🎯</span>
+        <span>SMART AI<small>FORECASTING</small></span>
+      </a>
+      <nav class="sidebar-nav">
+        <a class="sidebar-link" href="dashboard.html"><span class="link-icon" aria-hidden="true">📊</span> Dashboard</a>
+        <a class="sidebar-link" href="inventory.html"><span class="link-icon" aria-hidden="true">📦</span> Inventory</a>
+        <a class="sidebar-link" href="forecast.html"><span class="link-icon" aria-hidden="true">🔮</span> Forecast</a>
+        <a class="sidebar-link" href="alerts.html" aria-current="page"><span class="link-icon" aria-hidden="true">🔔</span> Alerts <span class="badge badge-danger" id="alertCountBadge" style="margin-left:auto;">0</span></a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn btn-ghost btn-block" data-logout style="color: var(--gray-light); border-color: rgba(255,255,255,0.15);">🚪 Logout</button>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ======= Main ======= -->
+    <div class="main" id="main">
+      <header class="app-header">
+        <button class="hamburger" data-sidebar-toggle aria-label="Toggle menu">☰</button>
+        <h1 class="page-title">🔔 Alerts</h1>
+        <div style="margin-left:auto;" class="flex">
+          <span class="badge badge-success live-badge"><span class="live-dot" aria-hidden="true"></span> Live</span>
+          <div class="user-chip">
+            <div style="text-align:right;">
+              <div class="user-name">👋 Welcome, <span id="userName">User</span></div>
+              <div class="user-role">Store Manager</div>
+            </div>
+            <div class="avatar" id="userAvatar" aria-hidden="true">SM</div>
+          </div>
+        </div>
+      </header>
+
+      <div class="app-content">
+        <div class="page-heading">
+          <div>
+            <h2 class="page-heading-title">🔔 Alerts &amp; Recommendations</h2>
+            <p class="sub">Smart notifications to keep your shelves stocked</p>
+          </div>
+          <div class="flex">
+            <button class="btn btn-ghost" id="refreshBtn">🔄 Refresh</button>
+            <button class="btn btn-outline" id="markAllBtn">✓ Mark All Resolved</button>
+          </div>
+        </div>
+
+        <!-- Alert Stats -->
+        <div class="grid-4">
+          <div class="kpi-card is-danger">
+            <div class="kpi-icon is-danger" aria-hidden="true">🔴</div>
+            <div><div class="kpi-value" id="statCritical">–</div><div class="kpi-label">Critical</div></div>
+          </div>
+          <div class="kpi-card is-warning">
+            <div class="kpi-icon is-warning" aria-hidden="true">🟡</div>
+            <div><div class="kpi-value" id="statWarning">–</div><div class="kpi-label">Warning</div></div>
+          </div>
+          <div class="kpi-card is-success">
+            <div class="kpi-icon is-success" aria-hidden="true">🟢</div>
+            <div><div class="kpi-value" id="statResolved">–</div><div class="kpi-label">Resolved</div></div>
+          </div>
+          <div class="kpi-card is-info">
+            <div class="kpi-icon is-info" aria-hidden="true">📊</div>
+            <div><div class="kpi-value" id="statTotal">–</div><div class="kpi-label">Total Alerts</div></div>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-bar" aria-label="Alert filters">
+          <select class="form-select" id="severityFilter" aria-label="Filter by severity">
+            <option value="">All Severities</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+          <select class="form-select" id="typeFilter" aria-label="Filter by type">
+            <option value="">All Types</option>
+            <option value="stockout">Stockout Risk</option>
+            <option value="overstock">Overstock</option>
+            <option value="info">Healthy Stock</option>
+          </select>
+          <select class="form-select" id="statusFilter" aria-label="Filter by status">
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="resolved">Resolved</option>
+          </select>
+        </div>
+
+        <!-- Alerts List -->
+        <div id="alertsList" aria-live="polite">
+          <div class="empty-state hidden" id="alertsEmpty">
+            <span class="empty-icon" aria-hidden="true">🎉</span>
+            <h3>No alerts match your filters</h3>
+            <p>Try clearing filters or check back later.</p>
+          </div>
+        </div>
+
+        <!-- AI Summary -->
+        <div class="ai-summary mt-lg">
+          <div class="card-header">
+            <h2 class="card-title">🤖 AI Summary</h2>
+            <span class="badge badge-gemini">Powered by Gemini</span>
+          </div>
+          <div class="ai-section">
+            <span class="ai-point" aria-hidden="true">🔴</span>
+            <p><strong>Critical actions required.</strong> <span id="aiCriticalText">–</span></p>
+          </div>
+          <div class="ai-section">
+            <span class="ai-point" aria-hidden="true">🟡</span>
+            <p><strong>Warnings.</strong> <span id="aiWarningText">–</span></p>
+          </div>
+          <div class="ai-section">
+            <span class="ai-point" aria-hidden="true">💡</span>
+            <p><span id="aiOverallText">–</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    (function () {
+      var store = SAF.getStore();
+      var active = [];
+      var resolved = store.resolved.slice();
+
+      function buildAlerts() {
+        var arr = store.products.map(function (p) {
+          var st = SAF.productStatus(p);
+          var demand = SAF.predictedDemand(p);
+          var reorder = Math.max(demand - p.stock, 10);
+          var isLow = st.key === 'low';
+          return {
+            id: 'p' + p.id,
+            product: p.name,
+            type: isLow ? 'stockout' : st.key === 'overstock' ? 'overstock' : 'info',
+            level: st.key === 'low' ? 'high' : st.key === 'overstock' ? 'medium' : 'low',
+            status: isLow ? 'active' : 'active',
+            icon: isLow ? '🔴' : st.key === 'overstock' ? '🟡' : '🟢',
+            title: p.name + ' — ' + (isLow ? 'Stockout Risk' : st.key === 'overstock' ? 'Overstock Detected' : 'Healthy Stock'),
+            desc: isLow ? 'Reorder recommended: ' + reorder + ' units (predicted demand ' + demand + ')' :
+              st.key === 'overstock' ? 'Consider reducing inventory to optimize cash flow.' : 'Stock levels are optimal.',
+            date: 'Jan ' + (13 + (p.id % 4)) + ', 2026'
+          };
+        });
+        return arr;
+      }
+
+      function render() {
+        var sev = document.getElementById('severityFilter').value;
+        var typ = document.getElementById('typeFilter').value;
+        var status = document.getElementById('statusFilter').value;
+
+        var rows = active.filter(function (a) {
+          return (!sev || a.level === sev) && (!typ || a.type === typ) && (!status || a.status === status);
+        });
+
+        var stats = {
+          critical: active.filter(function (a) { return a.level === 'high' && a.status === 'active'; }).length,
+          warning: active.filter(function (a) { return a.level === 'medium' && a.status === 'active'; }).length,
+          resolved: resolved.length,
+          total: active.length + resolved.length
+        };
+        document.getElementById('statCritical').textContent = stats.critical;
+        document.getElementById('statWarning').textContent = stats.warning;
+        document.getElementById('statResolved').textContent = stats.resolved;
+        document.getElementById('statTotal').textContent = stats.total;
+        document.getElementById('alertCountBadge').textContent = stats.critical;
+
+        document.getElementById('aiCriticalText').textContent =
+          stats.critical + ' product(s) are at risk of stockout. Immediate reorder recommended.';
+        document.getElementById('aiWarningText').textContent =
+          stats.warning + ' product(s) have overstock concerns. Consider adjusting inventory to optimize cash flow.';
+        document.getElementById('aiOverallText').textContent =
+          'Overall: ' + (stats.critical + stats.warning) + ' issue(s) need attention. Keep monitoring daily.';
+
+        var list = document.getElementById('alertsList');
+        document.getElementById('alertsEmpty').classList.toggle('hidden', rows.length > 0);
+        list.querySelectorAll('.alert-item').forEach(function (el) { el.remove(); });
+
+        var activeEls = rows.map(function (a) {
+          var sevClass = a.level === 'high' ? 'critical' : a.level === 'medium' ? 'warning' : 'info';
+          var sevBadge = a.level === 'high' ? '<span class="badge badge-high">HIGH</span>' :
+            a.level === 'medium' ? '<span class="badge badge-medium">MEDIUM</span>' :
+            '<span class="badge badge-low">LOW</span>';
+          var statusBadge = a.status === 'active'
+            ? '<span class="badge badge-active">Active</span>'
+            : '<span class="badge badge-resolved">Resolved</span>';
+          var actions = a.status === 'active'
+            ? '<button class="btn btn-sm btn-success" data-resolve="' + a.id + '">✓ Resolve</button>'
+            : '';
+          return '<div class="alert-item ' + sevClass + (a.status === 'resolved' ? ' resolved' : '') + '" data-alert="' + a.id + '">' +
+            '<div class="alert-icon ' + sevClass + '" aria-hidden="true">' + a.icon + '</div>' +
+            '<div class="alert-content">' +
+            '<div class="alert-title">' + a.title + '</div>' +
+            '<div class="alert-desc">' + a.desc + '</div>' +
+            '<div class="alert-meta">📅 ' + a.date + ' · ' + sevBadge + ' ' + statusBadge + '</div>' +
+            '</div>' +
+            '<div class="alert-actions">' + actions +
+            '<button class="btn btn-sm btn-ghost" data-delete-alert="' + a.id + '">🗑️</button>' +
+            '</div></div>';
+        }).join('');
+
+        var host = document.createElement('div');
+        host.innerHTML = activeEls;
+        list.insertBefore(host, document.getElementById('alertsEmpty'));
+        list.insertAdjacentHTML('beforeend', resolved.map(function (r) {
+          return '<div class="alert-item info resolved" data-alert="r' + r.id + '">' +
+            '<div class="alert-icon info" aria-hidden="true">🟢</div>' +
+            '<div class="alert-content">' +
+            '<div class="alert-title">' + r.product + ' — Healthy Stock</div>' +
+            '<div class="alert-desc">' + r.desc + '</div>' +
+            '<div class="alert-meta">📅 ' + r.date + ' · <span class="badge badge-low">LOW</span> <span class="badge badge-resolved">Resolved</span></div>' +
+            '</div>' +
+            '<div class="alert-actions"><button class="btn btn-sm btn-ghost" data-delete-alert="r' + r.id + '">🗑️</button></div></div>';
+        }).join(''));
+
+        bindActions();
+      }
+
+      function bindActions() {
+        document.querySelectorAll('[data-resolve]').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var id = btn.dataset.resolve;
+            var a = active.find(function (x) { return x.id === id; });
+            if (!a) return;
+            var el = document.querySelector('[data-alert="' + id + '"]');
+            el.classList.add('removing');
+            setTimeout(function () {
+              el.remove();
+              a.status = 'resolved';
+              resolved.unshift({ id: Date.now(), product: a.product, desc: 'Stock levels restored to optimal.', date: new Date().toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' }) });
+              SAF.toast('Alert for ' + a.product + ' resolved.', 'success', 'Alert resolved');
+              render();
+            }, 300);
+          });
+        });
+        document.querySelectorAll('[data-delete-alert]').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var id = btn.dataset.deleteAlert;
+            var el = document.querySelector('[data-alert="' + id + '"]');
+            if (el) {
+              el.classList.add('removing');
+              setTimeout(function () { el.remove(); }, 300);
+            }
+            active = active.filter(function (x) { return x.id !== id; });
+            resolved = resolved.filter(function (x) { return 'r' + x.id !== id; });
+            SAF.toast('Alert removed.', 'info', 'Removed');
+            setTimeout(render, 320);
+          });
+        });
+      }
+
+      function refresh() {
+        active = buildAlerts();
+        render();
+      }
+
+      ['severityFilter', 'typeFilter', 'statusFilter'].forEach(function (id) {
+        document.getElementById(id).addEventListener('change', render);
+      });
+
+      document.getElementById('refreshBtn').addEventListener('click', function () {
+        refresh();
+        SAF.toast('Alerts refreshed with latest data.', 'success', 'Refreshed');
+      });
+      document.getElementById('markAllBtn').addEventListener('click', function () {
+        var count = active.filter(function (a) { return a.status === 'active'; }).length;
+        active.forEach(function (a) {
+          if (a.status === 'active') {
+            a.status = 'resolved';
+            resolved.unshift({ id: Date.now(), product: a.product, desc: 'Marked as resolved.', date: new Date().toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' }) });
+          }
+        });
+        SAF.toast(count + ' active alert(s) marked as resolved.', 'success', 'All resolved');
+        render();
+      });
+
+      refresh();
+    })();
+  </script>
+</body>
+</html>
