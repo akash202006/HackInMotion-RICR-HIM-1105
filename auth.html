@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sign in or create your account - SMART AI FORECASTING for store managers.">
+  <title>Sign In · SMART AI FORECASTING</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { background: var(--light); }
+    .auth-page { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; }
+    .auth-left {
+      background: var(--dark);
+      display: flex; flex-direction: column; justify-content: space-between;
+      padding: var(--spacing-3xl) var(--spacing-2xl);
+      position: relative; overflow: hidden;
+    }
+    .auth-left::before {
+      content: ''; position: absolute; top: -120px; right: -120px;
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, rgba(255,107,53,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .auth-left::after {
+      content: ''; position: absolute; bottom: -80px; left: -80px;
+      width: 320px; height: 320px;
+      background: radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .auth-brand { display:flex; align-items:center; gap:var(--spacing-sm); text-decoration:none; position:relative; z-index:1; }
+    .auth-brand-icon { width:44px; height:44px; background:var(--primary-gradient); border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center; font-size:1.4rem; box-shadow:var(--shadow-md); }
+    .auth-brand-name { font-size:var(--font-lg); font-weight:800; color:var(--white); line-height:1.1; }
+    .auth-brand-name small { display:block; font-size:var(--font-xs); font-weight:500; color:var(--gray-light); }
+    .auth-hero { position:relative; z-index:1; }
+    .auth-hero-tag { display:inline-flex; align-items:center; gap:0.4rem; background:rgba(255,107,53,0.15); color:var(--primary-light); font-size:var(--font-xs); font-weight:600; padding:0.3rem 0.75rem; border-radius:var(--radius-full); border:1px solid rgba(255,107,53,0.25); margin-bottom:var(--spacing-md); letter-spacing:0.04em; }
+    .auth-hero h2 { font-size:2.2rem; font-weight:800; color:var(--white); line-height:1.2; margin-bottom:var(--spacing-md); }
+    .auth-hero h2 span { background:var(--primary-gradient); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+    .auth-hero p { color:var(--gray-light); font-size:var(--font-sm); line-height:1.7; max-width:380px; margin-bottom:var(--spacing-xl); }
+    .auth-stats { display:flex; gap:var(--spacing-xl); }
+    .auth-stat .num { font-size:var(--font-2xl); font-weight:800; color:var(--white); }
+    .auth-stat .lbl { font-size:var(--font-xs); color:var(--gray-light); }
+    .auth-testimonial { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:var(--radius-lg); padding:var(--spacing-md) var(--spacing-lg); position:relative; z-index:1; }
+    .auth-testimonial p { font-size:var(--font-sm); color:#CBD5E0; font-style:italic; line-height:1.6; margin-bottom:var(--spacing-sm); }
+    .auth-testimonial-author { display:flex; align-items:center; gap:var(--spacing-sm); }
+    .testimonial-avatar { width:36px; height:36px; border-radius:var(--radius-full); background:var(--primary-gradient); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:var(--font-xs); color:var(--white); }
+    .testimonial-name { font-size:var(--font-sm); font-weight:600; color:var(--white); }
+    .testimonial-role { font-size:var(--font-xs); color:var(--gray-light); }
+    .auth-right { display:flex; flex-direction:column; justify-content:center; align-items:center; padding:var(--spacing-2xl); background:var(--white); overflow-y:auto; }
+    .auth-form-wrapper { width:100%; max-width:420px; }
+    .auth-form-header { margin-bottom:var(--spacing-xl); text-align:center; }
+    .auth-form-header h1 { font-size:var(--font-2xl); font-weight:800; color:var(--dark); margin-bottom:var(--spacing-xs); }
+    .auth-form-header p { color:var(--gray); font-size:var(--font-sm); }
+    .auth-tabs { display:flex; background:var(--light); border-radius:var(--radius-md); padding:4px; margin-bottom:var(--spacing-xl); gap:4px; }
+    .auth-tab { flex:1; padding:0.55rem 1rem; font-size:var(--font-sm); font-weight:600; border:none; border-radius:calc(var(--radius-md) - 2px); background:transparent; color:var(--gray); cursor:pointer; transition:background-color 0.2s, color 0.2s, box-shadow 0.2s; }
+    .auth-tab.active { background:var(--white); color:var(--dark); box-shadow:var(--shadow-sm); }
+    .auth-form { display:none; }
+    .auth-form.active { display:block; }
+    .auth-divider { display:flex; align-items:center; gap:var(--spacing-sm); margin:var(--spacing-lg) 0; color:var(--gray-light); font-size:var(--font-xs); }
+    .auth-divider::before, .auth-divider::after { content:''; flex:1; height:1px; background:var(--gray-lighter); }
+    .auth-footer-note { text-align:center; font-size:var(--font-xs); color:var(--gray-light); margin-top:var(--spacing-lg); }
+    .auth-footer-note a { color:var(--primary); font-weight:600; }
+    .password-wrap { position:relative; }
+    .password-wrap .form-input { padding-right:3rem; }
+    .toggle-password { position:absolute; right:0.75rem; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--gray-light); font-size:1rem; cursor:pointer; padding:4px; line-height:1; }
+    .toggle-password:hover { color:var(--gray); }
+    .strength-bar { height:4px; border-radius:var(--radius-full); background:var(--gray-lighter); margin-top:6px; overflow:hidden; }
+    .strength-fill { height:100%; border-radius:var(--radius-full); width:0; transition:width 0.3s ease, background-color 0.3s ease; }
+    .strength-text { font-size:var(--font-xs); margin-top:3px; font-weight:500; }
+    .form-check { display:flex; align-items:flex-start; gap:var(--spacing-sm); font-size:var(--font-xs); color:var(--gray); cursor:pointer; }
+    .form-check input[type="checkbox"] { width:16px; height:16px; margin-top:1px; accent-color:var(--primary); flex-shrink:0; }
+    .form-check a { color:var(--primary); font-weight:600; }
+    .auth-switch-link { background:none; border:none; color:var(--primary); font-weight:600; font-size:inherit; cursor:pointer; padding:0; }
+    .auth-switch-link:hover { color:var(--primary-dark); text-decoration:underline; }
+    @media (max-width: 900px) { .auth-page { grid-template-columns:1fr; } .auth-left { display:none; } .auth-right { min-height:100vh; } }
+    @media (max-width: 480px) { .auth-right { padding:var(--spacing-lg); } }
+  </style>
+</head>
+<body>
+<div class="auth-page">
+
+  <!-- Left Branding Panel -->
+  <div class="auth-left">
+    <a href="index.html" class="auth-brand" aria-label="SMART AI FORECASTING home">
+      <div class="auth-brand-icon" aria-hidden="true">&#x1F3AF;</div>
+      <div class="auth-brand-name">SMART AI<small>FORECASTING</small></div>
+    </a>
+    <div class="auth-hero">
+      <div class="auth-hero-tag">&#x2728; AI-Powered Retail Intelligence</div>
+      <h2>Smarter stock.<br><span>Zero stockouts.</span></h2>
+      <p>Join thousands of store managers who use SMART AI FORECASTING to predict demand, optimize inventory, and grow revenue — without the guesswork.</p>
+      <div class="auth-stats">
+        <div class="auth-stat"><div class="num">92%</div><div class="lbl">Forecast accuracy</div></div>
+        <div class="auth-stat"><div class="num">-35%</div><div class="lbl">Stockout rate</div></div>
+        <div class="auth-stat"><div class="num">15 min</div><div class="lbl">Setup time</div></div>
+      </div>
+    </div>
+    <div class="auth-testimonial">
+      <p>"Since using SMART AI FORECASTING, our stockouts dropped by 40% in the first month. It tells us exactly what to reorder and when."</p>
+      <div class="auth-testimonial-author">
+        <div class="testimonial-avatar" aria-hidden="true">RK</div>
+        <div>
+          <div class="testimonial-name">Rajesh Kumar</div>
+          <div class="testimonial-role">Store Manager, Delhi Kirana</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Form Panel -->
+  <div class="auth-right">
+    <div class="auth-form-wrapper">
+      <div class="auth-form-header">
+        <h1 id="formTitle">Welcome back &#x1F44B;</h1>
+        <p id="formSubtitle">Sign in to your store manager account</p>
+      </div>
+
+      <!-- Tab Switcher -->
+      <div class="auth-tabs" role="tablist" aria-label="Authentication options">
+        <button class="auth-tab active" id="tabSignin" role="tab" aria-selected="true" aria-controls="signinForm">Sign In</button>
+        <button class="auth-tab" id="tabRegister" role="tab" aria-selected="false" aria-controls="registerForm">Register</button>
+      </div>
+
+      <!-- Sign In Form -->
+      <form class="auth-form active" id="signinForm" novalidate aria-labelledby="tabSignin">
+        <div class="form-group">
+          <label class="form-label" for="signinEmail">Email Address <span class="req">*</span></label>
+          <input class="form-input" type="email" id="signinEmail" placeholder="manager@store.com" autocomplete="email">
+          <p class="form-error">Please enter a valid email address.</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="signinPassword">Password <span class="req">*</span></label>
+          <div class="password-wrap">
+            <input class="form-input" type="password" id="signinPassword" placeholder="Enter your password" autocomplete="current-password">
+            <button type="button" class="toggle-password" aria-label="Show password" id="toggleSignin">&#x1F441;&#xFE0F;</button>
+          </div>
+          <p class="form-error">Password must be at least 6 characters.</p>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--spacing-lg);">
+          <label class="form-check"><input type="checkbox" id="rememberMe"> Remember me</label>
+          <a href="#" class="text-primary" style="font-size:var(--font-xs); font-weight:600;" id="forgotBtn">Forgot password?</a>
+        </div>
+        <div id="signinError" class="upload-status error" role="alert" style="display:none; margin-bottom:var(--spacing-md);"></div>
+        <button type="submit" class="btn btn-primary btn-block" id="signinBtn">&#x1F680; Sign In to Dashboard</button>
+        <div class="auth-divider">or</div>
+        <div style="text-align:center; font-size:var(--font-xs); color:var(--gray);">Don't have an account? <button type="button" class="auth-switch-link" id="gotoRegister">Register now &rarr;</button></div>
+      </form>
+
+      <!-- Register Form -->
+      <form class="auth-form" id="registerForm" novalidate aria-labelledby="tabRegister">
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label" for="regFirstName">First Name <span class="req">*</span></label>
+            <input class="form-input" type="text" id="regFirstName" placeholder="Rajesh" autocomplete="given-name">
+            <p class="form-error">First name is required.</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="regLastName">Last Name <span class="req">*</span></label>
+            <input class="form-input" type="text" id="regLastName" placeholder="Kumar" autocomplete="family-name">
+            <p class="form-error">Last name is required.</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="regEmail">Email Address <span class="req">*</span></label>
+          <input class="form-input" type="email" id="regEmail" placeholder="manager@store.com" autocomplete="email">
+          <p class="form-error">Please enter a valid email address.</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="regStore">Store Name <span class="req">*</span></label>
+          <input class="form-input" type="text" id="regStore" placeholder="Delhi Kirana Store" autocomplete="organization">
+          <p class="form-error">Store name is required.</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="regPassword">Password <span class="req">*</span></label>
+          <div class="password-wrap">
+            <input class="form-input" type="password" id="regPassword" placeholder="Create a strong password" autocomplete="new-password">
+            <button type="button" class="toggle-password" aria-label="Show password" id="toggleReg">&#x1F441;&#xFE0F;</button>
+          </div>
+          <p class="form-error">Password must be at least 6 characters.</p>
+          <div class="strength-bar" aria-hidden="true"><div class="strength-fill" id="strengthFill"></div></div>
+          <div class="strength-text" id="strengthText" style="color:var(--gray-light);">Password strength</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="regConfirm">Confirm Password <span class="req">*</span></label>
+          <div class="password-wrap">
+            <input class="form-input" type="password" id="regConfirm" placeholder="Re-enter your password" autocomplete="new-password">
+            <button type="button" class="toggle-password" aria-label="Show confirm password" id="toggleConfirm">&#x1F441;&#xFE0F;</button>
+          </div>
+          <p class="form-error">Passwords do not match.</p>
+        </div>
+        <div class="form-group" style="margin-bottom:var(--spacing-lg);">
+          <label class="form-check">
+            <input type="checkbox" id="regTerms"> I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+          </label>
+        </div>
+        <div id="registerError" class="upload-status error" role="alert" style="display:none; margin-bottom:var(--spacing-md);"></div>
+        <button type="submit" class="btn btn-primary btn-block" id="registerBtn">&#x2728; Create Account</button>
+        <div style="margin-top:var(--spacing-md); text-align:center; font-size:var(--font-xs); color:var(--gray);">Already have an account? <button type="button" class="auth-switch-link" id="gotoSignin">Sign in &rarr;</button></div>
+      </form>
+
+      <div class="auth-footer-note"><a href="index.html">&larr; Back to homepage</a></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // Redirect if already logged in
+  try {
+    var existing = localStorage.getItem('saf_user');
+    if (existing) { JSON.parse(existing); window.location.href = 'dashboard.html'; return; }
+  } catch(e) { localStorage.removeItem('saf_user'); }
+
+  function validateEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+
+  function showMsg(id, msg, type) {
+    var el = document.getElementById(id);
+    el.textContent = msg;
+    el.className = 'upload-status ' + (type || 'error');
+    el.style.display = 'flex';
+  }
+  function hideMsg(id) {
+    var el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  }
+
+  function setFieldState(inputId, valid) {
+    var group = document.getElementById(inputId).closest('.form-group');
+    group.classList.remove('invalid', 'valid');
+    group.classList.add(valid ? 'valid' : 'invalid');
+  }
+
+  // Tab switching
+  function switchTab(tab) {
+    var isSignin = (tab === 'signin');
+    document.getElementById('tabSignin').classList.toggle('active', isSignin);
+    document.getElementById('tabRegister').classList.toggle('active', !isSignin);
+    document.getElementById('tabSignin').setAttribute('aria-selected', String(isSignin));
+    document.getElementById('tabRegister').setAttribute('aria-selected', String(!isSignin));
+    document.getElementById('signinForm').classList.toggle('active', isSignin);
+    document.getElementById('registerForm').classList.toggle('active', !isSignin);
+    document.getElementById('formTitle').textContent = isSignin ? 'Welcome back \uD83D\uDC4B' : 'Create your account \uD83C\uDFAF';
+    document.getElementById('formSubtitle').textContent = isSignin ? 'Sign in to your store manager account' : 'Set up your free store manager account';
+    hideMsg('signinError'); hideMsg('registerError');
+    // Clear validation states
+    document.querySelectorAll('.form-group').forEach(function(g) { g.classList.remove('invalid','valid'); });
+  }
+
+  document.getElementById('tabSignin').addEventListener('click', function() { switchTab('signin'); });
+  document.getElementById('tabRegister').addEventListener('click', function() { switchTab('register'); });
+  document.getElementById('gotoRegister').addEventListener('click', function() { switchTab('register'); });
+  document.getElementById('gotoSignin').addEventListener('click', function() { switchTab('signin'); });
+
+  // Password toggle
+  function bindToggle(btnId, inputId) {
+    document.getElementById(btnId).addEventListener('click', function() {
+      var input = document.getElementById(inputId);
+      var isPass = input.type === 'password';
+      input.type = isPass ? 'text' : 'password';
+      this.innerHTML = isPass ? '\uD83D\uDE48' : '\uD83D\uDC41\uFE0F';
+    });
+  }
+  bindToggle('toggleSignin', 'signinPassword');
+  bindToggle('toggleReg', 'regPassword');
+  bindToggle('toggleConfirm', 'regConfirm');
+
+  // Password strength
+  document.getElementById('regPassword').addEventListener('input', function() {
+    var val = this.value;
+    var fill = document.getElementById('strengthFill');
+    var text = document.getElementById('strengthText');
+    if (!val) { fill.style.width = '0'; text.textContent = 'Password strength'; text.style.color = 'var(--gray-light)'; return; }
+    var score = 0;
+    if (val.length >= 6) score++;
+    if (val.length >= 10) score++;
+    if (/[A-Z]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+    var levels = [
+      { pct:'20%', color:'var(--danger)', label:'Very weak' },
+      { pct:'40%', color:'var(--warning)', label:'Weak' },
+      { pct:'60%', color:'#ECC94B', label:'Fair' },
+      { pct:'80%', color:'var(--info)', label:'Good' },
+      { pct:'100%', color:'var(--success)', label:'Strong \uD83D\uDCAA' }
+    ];
+    var lvl = levels[Math.min(score - 1, 4)] || levels[0];
+    fill.style.width = lvl.pct;
+    fill.style.backgroundColor = lvl.color;
+    text.textContent = lvl.label;
+    text.style.color = lvl.color;
+  });
+
+  // Forgot password
+  document.getElementById('forgotBtn').addEventListener('click', function(e) {
+    e.preventDefault();
+    var email = document.getElementById('signinEmail').value.trim();
+    if (!email || !validateEmail(email)) {
+      showMsg('signinError', 'Enter your email address above, then click Forgot password.');
+      return;
+    }
+    showMsg('signinError', '\u2705 If an account exists for ' + email + ', a reset link has been sent (demo mode).', 'success');
+  });
+
+  // User store helpers
+  function getUsers() {
+    try { return JSON.parse(localStorage.getItem('saf_users') || '[]'); } catch(e) { return []; }
+  }
+  function saveUsers(u) { localStorage.setItem('saf_users', JSON.stringify(u)); }
+
+  // Sign In
+  document.getElementById('signinForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    hideMsg('signinError');
+    var email = document.getElementById('signinEmail').value.trim();
+    var password = document.getElementById('signinPassword').value;
+    var ok = true;
+    if (!email || !validateEmail(email)) { setFieldState('signinEmail', false); ok = false; } else { setFieldState('signinEmail', true); }
+    if (!password || password.length < 6) { setFieldState('signinPassword', false); ok = false; } else { setFieldState('signinPassword', true); }
+    if (!ok) return;
+
+    var btn = document.getElementById('signinBtn');
+    var orig = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Signing in...';
+
+    setTimeout(function() {
+      var users = getUsers();
+      var user = users.find(function(u) { return u.email.toLowerCase() === email.toLowerCase(); });
+      if (!user) {
+        btn.disabled = false; btn.innerHTML = orig;
+        setFieldState('signinEmail', false);
+        showMsg('signinError', '\u274C No account found with this email. Please register first.');
+        return;
+      }
+      if (user.password !== password) {
+        btn.disabled = false; btn.innerHTML = orig;
+        setFieldState('signinPassword', false);
+        showMsg('signinError', '\u274C Incorrect password. Please try again.');
+        return;
+      }
+      var session = { name: user.firstName + ' ' + user.lastName, email: user.email, store: user.store, role: 'Store Manager', loginTime: Date.now() };
+      localStorage.setItem('saf_user', JSON.stringify(session));
+      btn.innerHTML = '\u2705 Signing in...';
+      setTimeout(function() { window.location.href = 'dashboard.html'; }, 500);
+    }, 900);
+  });
+
+  // Register
+  document.getElementById('registerForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    hideMsg('registerError');
+    var firstName = document.getElementById('regFirstName').value.trim();
+    var lastName  = document.getElementById('regLastName').value.trim();
+    var email     = document.getElementById('regEmail').value.trim();
+    var store     = document.getElementById('regStore').value.trim();
+    var password  = document.getElementById('regPassword').value;
+    var confirm   = document.getElementById('regConfirm').value;
+    var terms     = document.getElementById('regTerms').checked;
+
+    var ok = true;
+    if (!firstName) { setFieldState('regFirstName', false); ok = false; } else { setFieldState('regFirstName', true); }
+    if (!lastName)  { setFieldState('regLastName', false);  ok = false; } else { setFieldState('regLastName', true); }
+    if (!email || !validateEmail(email)) { setFieldState('regEmail', false); ok = false; } else { setFieldState('regEmail', true); }
+    if (!store) { setFieldState('regStore', false); ok = false; } else { setFieldState('regStore', true); }
+    if (!password || password.length < 6) { setFieldState('regPassword', false); ok = false; } else { setFieldState('regPassword', true); }
+    if (!confirm) { setFieldState('regConfirm', false); ok = false; } else { setFieldState('regConfirm', true); }
+    if (!ok) return;
+    if (password !== confirm) { setFieldState('regConfirm', false); showMsg('registerError', '\u274C Passwords do not match.'); return; }
+    if (!terms) { showMsg('registerError', '\u274C Please accept the Terms of Service to continue.'); return; }
+
+    var btn = document.getElementById('registerBtn');
+    var orig = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Creating account...';
+
+    setTimeout(function() {
+      var users = getUsers();
+      if (users.find(function(u) { return u.email.toLowerCase() === email.toLowerCase(); })) {
+        btn.disabled = false; btn.innerHTML = orig;
+        setFieldState('regEmail', false);
+        showMsg('registerError', '\u274C An account with this email already exists. Try signing in.');
+        return;
+      }
+      users.push({ firstName: firstName, lastName: lastName, email: email, store: store, password: password, createdAt: Date.now() });
+      saveUsers(users);
+      var session = { name: firstName + ' ' + lastName, email: email, store: store, role: 'Store Manager', loginTime: Date.now() };
+      localStorage.setItem('saf_user', JSON.stringify(session));
+      btn.innerHTML = '\u2705 Account created!';
+      setTimeout(function() { window.location.href = 'dashboard.html'; }, 600);
+    }, 1000);
+  });
+})();
+</script>
+</body>
+</html>
