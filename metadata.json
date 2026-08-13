@@ -1,0 +1,6 @@
+{
+  "name": "StockPulse AI",
+  "description": "AI-powered inventory management and demand forecasting platform predicting future product demand, calculating lead-time stock risks, and providing actionable reorder recommendations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
