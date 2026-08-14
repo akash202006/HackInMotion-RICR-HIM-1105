@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Upload with AI Processing - SMART AI FORECASTING</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            border-bottom: 2px solid rgba(102, 126, 234, 0.12);
+            padding: 18px 24px;
+        }
+
+        .nav-container {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .nav-brand {
+            display: inline-block;
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1.2;
+            color: #667eea;
+            letter-spacing: 0.2px;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .sidebar-container {
+            display: flex;
+            flex: 1;
+            width: 100%;
+            min-height: calc(100vh - 72px);
+            margin-top: 0;
+        }
+
+        .sidebar {
+            position: relative;
+            left: auto;
+            top: auto;
+            bottom: auto;
+            z-index: 1;
+            width: 280px;
+            flex: 0 0 280px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 15px;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .sidebar-nav-links a {
+            padding: 18px 18px;
+            background: linear-gradient(135deg, #f0f4ff 0%, #e8ecff 100%);
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            transition: all 0.3s;
+            text-align: left;
+            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 54px;
+            width: 100%;
+        }
+
+        .sidebar-nav-links a:hover {
+            background: linear-gradient(135deg, #e3f2fd 0%, #d1e7f7 100%);
+            border-color: #667eea;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .sidebar-nav-links a.active-nav {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: 1px solid #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .sidebar-nav-links a.active-nav:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #6a3fa0 100%);
+        }
+
+        .sidebar-nav-links a.logout-btn {
+            background: linear-gradient(135deg, #FF6B6B 0%, #EE5A6F 100%);
+            color: white;
+            border: none;
+            margin-top: 20px;
+            padding-top: 16px;
+            padding-bottom: 16px;
+        }
+
+        .sidebar-nav-links a.logout-btn:hover {
+            background: linear-gradient(135deg, #EE5A6F 0%, #E84C3D 100%);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+            transform: translateX(5px);
+        }
+
+        .sidebar-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 25px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .sidebar-items {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sidebar-item {
+            padding: 18px 16px;
+            background: linear-gradient(135deg, #f5f7ff 0%, #f0f4ff 100%);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 700;
+            color: #667eea;
+            transition: all 0.3s;
+            text-align: center;
+            min-height: 64px;
+        }
+
+        .sidebar-item:hover {
+            background: linear-gradient(135deg, #e3f2fd 0%, #e1f5fe 100%);
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .sidebar-item.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .upload-container {
+            flex: 1 1 auto;
+            min-width: 0;
+            padding: 40px;
+            overflow-y: auto;
+            margin: 0;
+        }
+
+        .upload-card {
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            margin-bottom: 30px;
+            border-top: 5px solid #667eea;
+            transition: all 0.3s ease;
+            animation: slideUp 0.6s ease-out;
+            display: none;
+        }
+
+        .upload-card.active {
+            display: block;
+        }
+
+        .upload-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .upload-card:nth-child(2) {
+            border-top-color: #FF6B6B;
+        }
+
+        .upload-card:nth-child(3) {
+            border-top-color: #4ECDC4;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .upload-section {
+            margin-bottom: 30px;
+        }
+
+        .upload-section h2 {
+            color: #333;
+            border-bottom: none;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            font-size: 38px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+        }
+
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 12px;
+            padding: 70px 50px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: linear-gradient(135deg, #f5f7ff 0%, #f0f4ff 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .upload-area:hover::before {
+            left: 100%;
+        }
+
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: linear-gradient(135deg, #f0f4ff 0%, #e8ecff 100%);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+            transform: scale(1.02);
+        }
+
+        .upload-area.dragover {
+            border-color: #FF6B6B;
+            background: linear-gradient(135deg, #ffe5e5 0%, #ffd4d4 100%);
+            box-shadow: 0 12px 30px rgba(255, 107, 107, 0.3);
+        }
+
+        .upload-area-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .upload-area-text {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .upload-area-subtext {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-list {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .file-item {
+            background: linear-gradient(135deg, #f5f7ff 0%, #f0f4ff 100%);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            border-left: 4px solid #667eea;
+            transition: all 0.3s;
+        }
+
+        .file-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .file-item-info {
+            flex: 1;
+        }
+
+        .file-item-name {
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+        }
+
+        .file-item-name::before {
+            content: '📄';
+        }
+
+        .file-item-size {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #FF6B6B 0%, #EE5A6F 100%);
+            color: white;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #e1f5fe 100%);
+            border-left: 5px solid #2196F3;
+            padding: 20px 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(33, 150, 243, 0.1);
+        }
+
+        .info-box ul {
+            margin: 15px 0 0 20px;
+            line-height: 2;
+        }
+
+        .info-box ul li {
+            color: #1565c0;
+            font-size: 16px;
+        }
+
+        .info-box strong {
+            color: #0d47a1;
+            font-size: 18px;
+        }
+
+        .info-box.success {
+            background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
+            border-left-color: #4CAF50;
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.1);
+        }
+
+        .info-box.success strong,
+        .info-box.success li {
+            color: #1b5e20;
+        }
+
+        .info-box.error {
+            background: linear-gradient(135deg, #ffcdd2 0%, #ffb3ba 100%);
+            border-left-color: #f44336;
+            box-shadow: 0 2px 8px rgba(244, 67, 54, 0.1);
+        }
+
+        .info-box.error strong,
+        .info-box.error li {
+            color: #b71c1c;
+        }
+
+        .info-box.warning {
+            background: linear-gradient(135deg, #fff9c4 0%, #ffe082 100%);
+            border-left-color: #fbc02d;
+            box-shadow: 0 2px 8px rgba(251, 192, 45, 0.1);
+        }
+
+        .info-box.warning strong,
+        .info-box.warning li {
+            color: #f57f17;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 40px;
+            background: linear-gradient(90deg, #f5f5f5 0%, #eeeeee 100%);
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 15px 0;
+            display: none;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            border: 1px solid #ddd;
+        }
+
+        .progress-bar.active {
+            display: block;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: inset 0 0 10px rgba(255,255,255,0.3);
+        }
+
+        .processing-section {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .processing-section.active {
+            display: block;
+        }
+
+        .result-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .result-item {
+            background: linear-gradient(135deg, #f5f7ff 0%, #f0f4ff 100%);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+        }
+
+        .result-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+        }
+
+        .result-item.error {
+            border-left-color: #f44336;
+            background: linear-gradient(135deg, #ffe5e5 0%, #ffd4d4 100%);
+        }
+
+        .result-item.success {
+            border-left-color: #4CAF50;
+            background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
+        }
+
+        .result-item-number {
+            font-size: 38px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .result-item.error .result-item-number {
+            color: #f44336;
+        }
+
+        .result-item.success .result-item-number {
+            color: #4CAF50;
+        }
+
+        .result-item-label {
+            font-size: 16px;
+            color: #666;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        .errors-list {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border: 2px solid #ef9a9a;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            max-height: 300px;
+            overflow-y: auto;
+            box-shadow: 0 2px 8px rgba(244, 67, 54, 0.1);
+        }
+
+        .error-item {
+            padding: 12px;
+            border-bottom: 1px solid #ef9a9a;
+            font-size: 14px;
+            color: #c62828;
+            line-height: 1.5;
+        }
+
+        .error-item:last-child {
+            border-bottom: none;
+        }
+
+        .csv-template {
+            background: linear-gradient(135deg, #f5f5f5 0%, #eeeeee 100%);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            border: 2px solid #ddd;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .csv-template code {
+            display: block;
+            white-space: pre;
+            font-size: 13px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .template-btn {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 15px;
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+            transition: all 0.3s;
+        }
+
+        .template-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
+        }
+
+        .ai-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3); }
+            50% { box-shadow: 0 5px 15px rgba(102, 126, 234, 0.5); }
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        .summary-table th,
+        .summary-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .summary-table th {
+            background: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+
+        .summary-table tr:hover {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <span class="nav-brand">📤 CSV Upload with AI Processing</span>
+            
+        </div>
+    </nav>
+
+    <div class="sidebar-container">
+        <div class="sidebar">
+            <div class="sidebar-nav-links">
+                <a href="index.html">🏠 Home</a>
+                <a href="dashboard.html">📊 Dashboard</a>
+                <a href="inventory.html">📦 Inventory</a>
+                <a href="csv-upload.html" class="active-nav">📤 Upload CSV</a>
+                <a href="#" onclick="logout(); return false;" class="logout-btn">🚪 Logout</a>
+            </div>
+
+            <div class="sidebar-title">📋 Upload Type</div>
+            <div class="sidebar-items">
+                <div class="sidebar-item active" onclick="switchCard(0)">
+                    🤖 Smart Upload<br><span style="font-size: 12px; font-weight: 400;">Auto-Detect</span>
+                </div>
+                <div class="sidebar-item" onclick="switchCard(1)">
+                    📦 Products<br><span style="font-size: 12px; font-weight: 400;">Upload CSV</span>
+                </div>
+                <div class="sidebar-item" onclick="switchCard(2)">
+                    💰 Sales Data<br><span style="font-size: 12px; font-weight: 400;">Upload CSV</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="upload-container">
+            <!-- Smart Auto Upload Section -->
+            <div class="upload-card active" style="border-top: 5px solid #667eea; background: linear-gradient(to bottom, rgba(102, 126, 234, 0.03), white);">
+                <div class="upload-section">
+                <h2>🤖 Smart CSV Upload <span class="ai-badge">Auto-Detect</span></h2>
+                
+                <div class="info-box">
+                    <strong>Upload your CSV!</strong>
+                    <ul>
+                        <li>✅ Any CSV format is acceptable (column names will be detected automatically))</li>
+                        <li>✅ SMART AI will validate, clean, and enhance the data.</li>
+                        <li>✅ The system will automatically detect whether the data is for Products or Sales</li>
+                        <li>✅ Valid records will be saved directly to the database</li>
+                        <li>❌ Raw CSV data is never stored in the database</li>
+                    </ul>
+                </div>
+
+                <div class="upload-area" id="smartUploadArea" style="border-color: #667eea;">
+                    <div class="upload-area-icon">🚀</div>
+                    <div class="upload-area-text">Drag and drop any CSV file here</div>
+                    <div class="upload-area-subtext">SMART AI will automatically determine whether the data is for Products or Sales</div>
+                    <input type="file" id="smartFile" class="file-input" accept=".csv" />
+                </div>
+
+                <div class="file-list" id="smartList"></div>
+
+                <div>
+                    <button class="btn btn-primary" id="uploadSmartBtn" disabled style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                        🤖 Upload & Auto-Save with SMART AI
+                    </button>
+                </div>
+
+                <div class="progress-bar" id="smartProgress">
+                    <div class="progress-fill" id="smartProgressFill" style="background: linear-gradient(90deg, #667eea, #764ba2);">SMART AI Processing...</div>
+                </div>
+
+                <div class="processing-section" id="smartResult"></div>
+            </div>
+        </div>
+
+        <!-- Products Upload Section -->
+        <div class="upload-card">
+            <div class="upload-section">
+                <h2>📦 Upload Products <span class="ai-badge">🤖 SMART AI Powered</span></h2>
+                
+                <div class="info-box">
+                    <strong>How it works:</strong>
+                    <ul>
+                        <li>1. Prepare your CSV file with product data</li>
+                        <li>2. Upload the file</li>
+                        <li>3. SMART AI validates, cleans, and enhances the data</li>
+                        <li>4. Invalid rows are flagged with suggestions</li>
+                        <li>5. Valid products are automatically saved to database</li>
+                    </ul>
+                </div>
+
+                <div class="upload-area" id="productsUploadArea">
+                    <div class="upload-area-icon">📁</div>
+                    <div class="upload-area-text">Drag your CSV file here</div>
+                    <div class="upload-area-subtext">or click to select</div>
+                    <input type="file" id="productsFile" class="file-input" accept=".csv" />
+                </div>
+
+                <div class="file-list" id="productsList"></div>
+
+                <div>
+                    <button class="btn btn-primary" id="uploadProductsBtn" disabled>
+                        🚀 Upload & Process with SMART AI 
+                    </button>
+                </div>
+
+                <div class="progress-bar" id="productsProgress">
+                    <div class="progress-fill" id="productsProgressFill">0%</div>
+                </div>
+
+                <div class="processing-section" id="productsResult"></div>
+
+                <div style="margin-top: 20px;">
+                    <button class="template-btn" onclick="downloadProductsTemplate()">
+                        📥 Download Products Template
+                    </button>
+                    <div class="csv-template">
+                        <code>name,sku,category,stock,price,supplier,lead_time,min_stock
+Pepsi 750ml,PEP-750,Beverages,45,35.00,City Drinks,3,20
+Maggi Masala,MAG-001,Instant Food,32,42.00,Rapid Supplies,2,20
+Aashirvaad Atta,AAT-001,Staples,64,220.00,Farm Pure,6,30</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sales Upload Section -->
+        <div class="upload-card">
+            <div class="upload-section">
+                <h2>💰 Upload Sales Data <span class="ai-badge">🤖SMART AI Powered</span></h2>
+                
+                <div class="info-box">
+                    <strong>How it works:</strong>
+                    <ul>
+                        <li>1. Prepare your CSV file with sales transaction data</li>
+                        <li>2. File must contain product SKUs from your inventory</li>
+                        <li>3. Upload the file</li>
+                        <li>4. SMART AI validates dates, quantities, and revenue</li>
+                        <li>5. Valid sales records are automatically saved</li>
+                    </ul>
+                </div>
+
+                <div class="upload-area" id="salesUploadArea">
+                    <div class="upload-area-icon">📊</div>
+                    <div class="upload-area-text">Drag your CSV file here</div>
+                    <div class="upload-area-subtext">or click to select</div>
+                    <input type="file" id="salesFile" class="file-input" accept=".csv" />
+                </div>
+
+                <div class="file-list" id="salesList"></div>
+
+                <div>
+                    <button class="btn btn-primary" id="uploadSalesBtn" disabled>
+                        🚀 Upload & Process with SMART AI
+                    </button>
+                </div>
+
+                <div class="progress-bar" id="salesProgress">
+                    <div class="progress-fill" id="salesProgressFill">0%</div>
+                </div>
+
+                <div class="processing-section" id="salesResult"></div>
+
+                <div style="margin-top: 20px;">
+                    <button class="template-btn" onclick="downloadSalesTemplate()">
+                        📥 Download Sales Template
+                    </button>
+                    <div class="csv-template">
+                        <code>product_sku,quantity_sold,revenue,sale_date
+PEP-750,10,350.00,2024-08-14
+MAG-001,5,210.00,2024-08-14
+AAT-001,2,440.00,2024-08-13</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        const normalizeApiHost = (host) => {
+            if (!host) return 'localhost';
+            const trimmed = String(host).trim();
+            if (['localhost', '127.0.0.1', '0.0.0.0', '::1'].includes(trimmed)) return 'localhost';
+            return trimmed.includes(':') && !trimmed.startsWith('[') ? '[' + trimmed + ']' : trimmed;
+        };
+
+        function resolveApiBase() {
+            if (window.__SMART_AI_API_BASE__) {
+                return String(window.__SMART_AI_API_BASE__).replace(/\/$/, '');
+            }
+            const currentHost = window.location.hostname || 'localhost';
+            const currentProtocol = window.location.protocol || 'http:';
+            if (['localhost', '127.0.0.1', '0.0.0.0', '::1'].includes(currentHost)) {
+                return 'http://localhost:8001/api';
+            }
+            return (window.location.origin || (currentProtocol + '//' + normalizeApiHost(currentHost))) + '/api';
+        }
+
+        const API_BASE = resolveApiBase();
+        
+        console.log('🔧 CSV Upload Page Initialized');
+        console.log('API_BASE:', API_BASE);
+        console.log('Current Host:', currentHost);
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📄 DOMContentLoaded fired');
+            try {
+                checkAuth();
+                console.log('✅ Auth check passed');
+            } catch(e) {
+                console.error('❌ Auth check failed:', e);
+            }
+            
+            try {
+                setupSmartUpload();
+                console.log('✅ Smart upload setup done');
+            } catch(e) {
+                console.error('❌ Smart upload setup failed:', e);
+            }
+            
+            try {
+                setupProductsUpload();
+                console.log('✅ Products upload setup done');
+            } catch(e) {
+                console.error('❌ Products upload setup failed:', e);
+            }
+            
+            try {
+                setupSalesUpload();
+                console.log('✅ Sales upload setup done');
+            } catch(e) {
+                console.error('❌ Sales upload setup failed:', e);
+            }
+        });
+
+        // ===== SMART AUTO UPLOAD =====
+        function setupSmartUpload() {
+            const uploadArea = document.getElementById('smartUploadArea');
+            const fileInput = document.getElementById('smartFile');
+            const fileList = document.getElementById('smartList');
+            const uploadBtn = document.getElementById('uploadSmartBtn');
+
+            uploadArea.addEventListener('click', () => fileInput.click());
+            uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+            uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                handleSmartFileSelect(e.dataTransfer.files, fileList, uploadBtn);
+            });
+            fileInput.addEventListener('change', (e) => handleSmartFileSelect(e.target.files, fileList, uploadBtn));
+            uploadBtn.addEventListener('click', () => uploadSmart());
+        }
+
+        function handleSmartFileSelect(files, fileList, uploadBtn) {
+            fileList.innerHTML = '';
+            if (files.length > 0) {
+                const file = files[0];
+                fileList.innerHTML = `<div class="file-item"><div class="file-item-info"><div class="file-item-name">📄 ${file.name}</div><div class="file-item-size">${formatFileSize(file.size)}</div></div><button class="btn btn-danger" onclick="clearSmartFile()">Clear</button></div>`;
+                uploadBtn.disabled = false;
+            }
+        }
+
+        function clearSmartFile() {
+            document.getElementById('smartFile').value = '';
+            document.getElementById('smartList').innerHTML = '';
+            document.getElementById('uploadSmartBtn').disabled = true;
+        }
+
+        async function uploadSmart() {
+            const file = document.getElementById('smartFile').files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+            const progressBar = document.getElementById('smartProgress');
+            const uploadBtn = document.getElementById('uploadSmartBtn');
+
+            progressBar.classList.add('active');
+            uploadBtn.disabled = true;
+            uploadBtn.textContent = '⏳ SMART AI processing...';
+
+            try {
+                const response = await fetch(`${API_BASE}/upload/csv`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${getToken()}` },
+                    body: formData
+                });
+                const data = await response.json();
+                progressBar.classList.remove('active');
+
+                if (!response.ok) {
+                    showSmartResult('error', data.detail || 'Upload failed');
+                    return;
+                }
+                showSmartResult('success', data);
+            } catch (error) {
+                progressBar.classList.remove('active');
+                showSmartResult('error', error.message);
+            }
+
+            uploadBtn.disabled = false;
+            uploadBtn.textContent = '🤖 Upload & Auto-Save with SMART AI';
+        }
+
+        function showSmartResult(status, data) {
+            const resultDiv = document.getElementById('smartResult');
+            resultDiv.classList.add('active');
+            let html = '';
+
+            if (status === 'error') {
+                html = `<div class="info-box error"><strong>❌ Upload Failed</strong><p>${data.message || data}</p></div>`;
+            } else {
+                const typeLabel = data.data_type === 'sales' ? '💰 Sales Data' : '📦 Products';
+                const inserted = data.records_inserted || data.products_inserted || 0;
+                html = `
+                    <div class="info-box success">
+                        <strong>✅ ${typeLabel} — Database mein save ho gaya!</strong>
+                        <p>${data.message}</p>
+                        <p><strong>🤖 ${data.ai_processing || 'SMART AI processing complete'}</strong></p>
+                    </div>
+                    <div class="result-summary">
+                        <div class="result-item"><div class="result-item-number">${inserted}</div><div class="result-item-label">Records Saved</div></div>
+                        <div class="result-item"><div class="result-item-number">${data.total_records || 0}</div><div class="result-item-label">Total Processed</div></div>
+                        <div class="result-item ${data.validation_errors && data.validation_errors.length ? 'error' : ''}"><div class="result-item-number">${data.validation_errors ? data.validation_errors.length : 0}</div><div class="result-item-label">Skipped Rows</div></div>
+                    </div>`;
+                if (data.validation_errors && data.validation_errors.length) {
+                    html += '<div class="errors-list"><strong>⚠️ Skipped Rows:</strong>';
+                    data.validation_errors.forEach(e => { html += `<div class="error-item">• ${e}</div>`; });
+                    html += '</div>';
+                }
+            }
+            resultDiv.innerHTML = html;
+        }
+
+        // ===== PRODUCTS UPLOAD =====
+        function setupProductsUpload() {
+            const uploadArea = document.getElementById('productsUploadArea');
+            const fileInput = document.getElementById('productsFile');
+            const fileList = document.getElementById('productsList');
+            const uploadBtn = document.getElementById('uploadProductsBtn');
+
+            uploadArea.addEventListener('click', () => fileInput.click());
+
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                handleProductsFileSelect(e.dataTransfer.files, fileList, uploadBtn);
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                handleProductsFileSelect(e.target.files, fileList, uploadBtn);
+            });
+
+            uploadBtn.addEventListener('click', () => uploadProducts());
+        }
+
+        function handleProductsFileSelect(files, fileList, uploadBtn) {
+            fileList.innerHTML = '';
+            if (files.length > 0) {
+                const file = files[0];
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <div class="file-item-info">
+                        <div class="file-item-name">📄 ${file.name}</div>
+                        <div class="file-item-size">${formatFileSize(file.size)}</div>
+                    </div>
+                    <button class="btn btn-danger" onclick="clearProductsFile()">Clear</button>
+                `;
+                fileList.appendChild(fileItem);
+                uploadBtn.disabled = false;
+            }
+        }
+
+        function clearProductsFile() {
+            document.getElementById('productsFile').value = '';
+            document.getElementById('productsList').innerHTML = '';
+            document.getElementById('uploadProductsBtn').disabled = true;
+        }
+
+        async function uploadProducts() {
+            const file = document.getElementById('productsFile').files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const progressBar = document.getElementById('productsProgress');
+            const resultDiv = document.getElementById('productsResult');
+            
+            progressBar.classList.add('active');
+            document.getElementById('uploadProductsBtn').disabled = true;
+
+            try {
+                const response = await fetch(`${API_BASE}/upload/products-csv`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${getToken()}`
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+                progressBar.classList.remove('active');
+
+                if (!response.ok) {
+                    showProductsResult('error', data.detail || 'Upload failed');
+                    return;
+                }
+
+                showProductsResult('success', data);
+            } catch (error) {
+                progressBar.classList.remove('active');
+                showProductsResult('error', error.message);
+            }
+
+            document.getElementById('uploadProductsBtn').disabled = false;
+        }
+
+        function showProductsResult(status, data) {
+            const resultDiv = document.getElementById('productsResult');
+            resultDiv.classList.add('active');
+            
+            let html = '';
+
+            if (status === 'error') {
+                html = `
+                    <div class="info-box error">
+                        <strong>❌ Upload Failed</strong>
+                        <p>${data.message || data}</p>
+                    </div>
+                `;
+            } else {
+                const stats = data.summary || {};
+                html = `
+                    <div class="info-box success">
+                        <strong>✅ Upload Successful!</strong>
+                        <p>${data.message}</p>
+                        <p><strong>🤖 SMART AI Processing:</strong> ${data.ai_processing || 'Completed'}</p>
+                    </div>
+
+                    <div class="result-summary">
+                        <div class="result-item">
+                            <div class="result-item-number">${data.products_inserted}</div>
+                            <div class="result-item-label">Products Inserted</div>
+                        </div>
+                        <div class="result-item ${data.validation_errors && data.validation_errors.length > 0 ? 'error' : ''}">
+                            <div class="result-item-number">${data.validation_errors ? data.validation_errors.length : 0}</div>
+                            <div class="result-item-label">Validation Errors</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-item-number">${data.total_products}</div>
+                            <div class="result-item-label">Total in File</div>
+                        </div>
+                    </div>
+                `;
+
+                if (data.summary) {
+                    html += `
+                        <h3>📊 Processing Summary</h3>
+                        <table class="summary-table">
+                            <tr>
+                                <th>Metric</th>
+                                <th>Value</th>
+                            </tr>
+                            <tr>
+                                <td>Total Rows</td>
+                                <td>${data.summary.total_rows || 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <td>Valid Records</td>
+                                <td>${data.summary.valid || 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <td>Invalid Records</td>
+                                <td>${data.summary.invalid || 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <td>Processing Notes</td>
+                                <td>${data.summary.processing_notes || 'N/A'}</td>
+                            </tr>
+                        </table>
+                    `;
+                }
+
+                if (data.validation_errors && data.validation_errors.length > 0) {
+                    html += '<div class="errors-list">';
+                    html += '<strong>⚠️ Validation Issues:</strong>';
+                    data.validation_errors.forEach(error => {
+                        html += `<div class="error-item">• ${error}</div>`;
+                    });
+                    html += '</div>';
+                }
+            }
+
+            resultDiv.innerHTML = html;
+        }
+
+        // ===== SALES UPLOAD =====
+        function setupSalesUpload() {
+            const uploadArea = document.getElementById('salesUploadArea');
+            const fileInput = document.getElementById('salesFile');
+            const fileList = document.getElementById('salesList');
+            const uploadBtn = document.getElementById('uploadSalesBtn');
+
+            uploadArea.addEventListener('click', () => fileInput.click());
+
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                handleSalesFileSelect(e.dataTransfer.files, fileList, uploadBtn);
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                handleSalesFileSelect(e.target.files, fileList, uploadBtn);
+            });
+
+            uploadBtn.addEventListener('click', () => uploadSales());
+        }
+
+        function handleSalesFileSelect(files, fileList, uploadBtn) {
+            fileList.innerHTML = '';
+            if (files.length > 0) {
+                const file = files[0];
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <div class="file-item-info">
+                        <div class="file-item-name">📊 ${file.name}</div>
+                        <div class="file-item-size">${formatFileSize(file.size)}</div>
+                    </div>
+                    <button class="btn btn-danger" onclick="clearSalesFile()">Clear</button>
+                `;
+                fileList.appendChild(fileItem);
+                uploadBtn.disabled = false;
+            }
+        }
+
+        function clearSalesFile() {
+            document.getElementById('salesFile').value = '';
+            document.getElementById('salesList').innerHTML = '';
+            document.getElementById('uploadSalesBtn').disabled = true;
+        }
+
+        async function uploadSales() {
+            const file = document.getElementById('salesFile').files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const progressBar = document.getElementById('salesProgress');
+            const resultDiv = document.getElementById('salesResult');
+            
+            progressBar.classList.add('active');
+            document.getElementById('uploadSalesBtn').disabled = true;
+
+            try {
+                const response = await fetch(`${API_BASE}/upload/sales-csv`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${getToken()}`
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+                progressBar.classList.remove('active');
+
+                if (!response.ok) {
+                    showSalesResult('error', data.detail || 'Upload failed');
+                    return;
+                }
+
+                showSalesResult('success', data);
+            } catch (error) {
+                progressBar.classList.remove('active');
+                showSalesResult('error', error.message);
+            }
+
+            document.getElementById('uploadSalesBtn').disabled = false;
+        }
+
+        function showSalesResult(status, data) {
+            const resultDiv = document.getElementById('salesResult');
+            resultDiv.classList.add('active');
+            
+            let html = '';
+
+            if (status === 'error') {
+                html = `
+                    <div class="info-box error">
+                        <strong>❌ Upload Failed</strong>
+                        <p>${data.message || data}</p>
+                    </div>
+                `;
+            } else {
+                const stats = data.summary || {};
+                html = `
+                    <div class="info-box success">
+                        <strong>✅ Upload Successful!</strong>
+                        <p>${data.message}</p>
+                        <p><strong>🤖SMART AI Processing:</strong> ${data.ai_processing || 'Completed'}</p>
+                    </div>
+
+                    <div class="result-summary">
+                        <div class="result-item">
+                            <div class="result-item-number">${data.records_inserted}</div>
+                            <div class="result-item-label">Records Inserted</div>
+                        </div>
+                        <div class="result-item ${data.validation_errors && data.validation_errors.length > 0 ? 'error' : ''}">
+                            <div class="result-item-number">${data.validation_errors ? data.validation_errors.length : 0}</div>
+                            <div class="result-item-label">Validation Errors</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-item-number">${data.total_records}</div>
+                            <div class="result-item-label">Total in File</div>
+                        </div>
+                    </div>
+                `;
+
+                if (data.summary) {
+                    html += `
+                        <h3>📊 Processing Summary</h3>
+                        <table class="summary-table">
+                            <tr>
+                                <th>Metric</th>
+                                <th>Value</th>
+                            </tr>
+                            <tr>
+                                <td>Total Rows</td>
+                                <td>${data.summary.total_rows || 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <td>Total Quantity Sold</td>
+                                <td>${data.summary.total_quantity || 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <td>Total Revenue</td>
+                                <td>₹${data.summary.total_revenue ? data.summary.total_revenue.toFixed(2) : 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <td>Date Range</td>
+                                <td>${data.summary.date_range || 'N/A'}</td>
+                            </tr>
+                        </table>
+                    `;
+                }
+
+                if (data.validation_errors && data.validation_errors.length > 0) {
+                    html += '<div class="errors-list">';
+                    html += '<strong>⚠️ Validation Issues:</strong>';
+                    data.validation_errors.forEach(error => {
+                        html += `<div class="error-item">• ${error}</div>`;
+                    });
+                    html += '</div>';
+                }
+            }
+
+            resultDiv.innerHTML = html;
+        }
+
+        // ===== TEMPLATES =====
+        function downloadProductsTemplate() {
+            const csv = `name,sku,category,stock,price,supplier,lead_time,min_stock
+Pepsi 750ml,PEP-750,Beverages,45,35.00,City Drinks,3,20
+Coca-Cola,CC-312,Beverages,52,80.00,Metro Beverages,5,22
+Maggi Masala,MAG-001,Instant Food,32,42.00,Rapid Supplies,2,20
+Aashirvaad Atta,AAT-001,Staples,64,220.00,Farm Pure,6,30
+Dairy Milk,DM-420,Confectionery,8,50.00,Sweet Hub,4,20
+Parle-G,PG-205,Snacks,35,20.00,Royal Bakers,2,18`;
+            downloadCSV(csv, 'products-template.csv');
+        }
+
+        function downloadSalesTemplate() {
+            const csv = `product_sku,quantity_sold,revenue,sale_date
+PEP-750,10,350.00,2024-08-14
+PEP-750,8,280.00,2024-08-13
+CC-312,5,400.00,2024-08-14
+MAG-001,15,630.00,2024-08-14
+AAT-001,2,440.00,2024-08-13
+DM-420,12,600.00,2024-08-14
+PG-205,25,500.00,2024-08-14`;
+            downloadCSV(csv, 'sales-template.csv');
+        }
+
+        function downloadCSV(content, filename) {
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(content));
+            element.setAttribute('download', filename);
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
+
+        // ===== UTILITIES =====
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        function getToken() {
+            return localStorage.getItem('saf_auth_token') || localStorage.getItem('access_token');
+        }
+
+        function checkAuth() {
+            if (!getToken()) {
+                window.location.href = 'auth.html';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('saf_auth_token');
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('saf_user');
+            window.location.href = 'auth.html';
+        }
+
+        // Sidebar Navigation
+        function switchCard(index) {
+            const cards = document.querySelectorAll('.upload-card');
+            const items = document.querySelectorAll('.sidebar-item');
+            
+            cards.forEach((card, i) => {
+                if (i === index) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+            });
+
+            items.forEach((item, i) => {
+                if (i === index) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
+    </script>
+    </div> <!-- End sidebar-container -->
+</body>
+</html>
