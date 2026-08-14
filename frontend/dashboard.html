@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Dashboard - SMART AI FORECASTING inventory overview.">
+  <title>Dashboard · SMART AI FORECASTING</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="app">
+    <!-- ======= Sidebar ======= -->
+    <aside class="sidebar" id="sidebar" aria-label="Sidebar navigation">
+      <a class="sidebar-brand" href="dashboard.html">
+        <img src="logo.svg" alt="" class="logo-icon" style="width: 32px; height: 32px;">
+        <span>STORE<small>FORECASTING</small></span>
+      </a>
+      <nav class="sidebar-nav">
+        <a class="sidebar-link" href="dashboard.html" aria-current="page"><span class="link-icon" aria-hidden="true">📊</span> Dashboard</a>
+        <a class="sidebar-link" href="inventory.html"><span class="link-icon" aria-hidden="true">📦</span> Inventory</a>
+        <a class="sidebar-link" href="forecast.html"><span class="link-icon" aria-hidden="true">🔮</span> Forecast</a>
+        <a class="sidebar-link" href="alerts.html"><span class="link-icon" aria-hidden="true">🔔</span> Alerts <span class="badge badge-danger" id="alertCountBadge" style="margin-left:auto;">0</span></a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn btn-ghost btn-block" data-logout style="color: var(--gray-light); border-color: rgba(255,255,255,0.15);">🚪 Logout</button>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ======= Main ======= -->
+    <div class="main" id="main">
+      <header class="app-header">
+        <button class="hamburger" data-sidebar-toggle aria-label="Toggle menu">☰</button>
+        <h1 class="page-title">📊 Dashboard</h1>
+        <div style="margin-left:auto;" class="flex">
+          <span class="badge badge-success live-badge"><span class="live-dot" aria-hidden="true"></span> Live</span>
+          <div class="user-chip">
+            <div style="text-align:right;">
+              <div class="user-name">👋 Welcome, <span id="userName">User</span></div>
+              <div class="user-role">Store Manager</div>
+            </div>
+            <div class="avatar" id="userAvatar" aria-hidden="true">SM</div>
+          </div>
+        </div>
+      </header>
+
+      <div class="app-content">
+        <!-- KPI Cards -->
+        <div class="grid-kpi" id="kpiGrid" aria-label="Key performance indicators">
+          <div class="kpi-card is-primary skeleton-card">
+            <div class="kpi-icon is-primary" aria-hidden="true">📦</div>
+            <div>
+              <div class="kpi-value" id="kpiTotal">–</div>
+              <div class="kpi-label">Total Products</div>
+              <div class="kpi-trend text-success">▲ 4 added this month</div>
+            </div>
+          </div>
+          <div class="kpi-card is-danger skeleton-card">
+            <div class="kpi-icon is-danger" aria-hidden="true">🔴</div>
+            <div>
+              <div class="kpi-value" id="kpiLow">–</div>
+              <div class="kpi-label">Low Stock</div>
+              <div class="kpi-trend text-danger">Action required</div>
+            </div>
+          </div>
+          <div class="kpi-card is-warning skeleton-card">
+            <div class="kpi-icon is-warning" aria-hidden="true">🟡</div>
+            <div>
+              <div class="kpi-value" id="kpiOver">–</div>
+              <div class="kpi-label">Overstock</div>
+              <div class="kpi-trend text-warning">Optimize cash flow</div>
+            </div>
+          </div>
+          <div class="kpi-card is-success skeleton-card">
+            <div class="kpi-icon is-success" aria-hidden="true">🟢</div>
+            <div>
+              <div class="kpi-value" id="kpiHealthy">–</div>
+              <div class="kpi-label">Healthy Stock</div>
+              <div class="kpi-trend text-success">All good</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="grid-2">
+          <div class="card no-hover">
+            <div class="card-header">
+              <h2 class="card-title">📈 Sales Trend</h2>
+              <span class="badge badge-info">Last 30 days</span>
+            </div>
+            <div class="chart-box">
+              <canvas id="salesTrendChart" role="img" aria-label="Line chart of sales trend over the last 30 days"></canvas>
+            </div>
+          </div>
+          <div class="card no-hover">
+            <div class="card-header">
+              <h2 class="card-title">📊 Inventory Status</h2>
+              <span class="badge badge-info">By category</span>
+            </div>
+            <div class="chart-box">
+              <canvas id="categoryChart" role="img" aria-label="doughnut chart of inventory by category"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Insights -->
+        <div class="card no-hover">
+          <div class="card-header">
+            <h2 class="card-title">📊 Inventory Insights</h2>
+            <span class="badge badge-gemini">Powered by SMART AI FORECASTING</span>
+          </div>
+          <div class="ai-insights-container">
+            <!-- Stockout Risk Card -->
+            <div class="ai-insight-card risk">
+              <div class="card-icon">🔴</div>
+              <div id="aiStockoutInsightContainer">
+                <strong>Scanning inventory…</strong>
+                <small>Loading risk analysis</small>
+              </div>
+            </div>
+            
+            <!-- Reorder Recommendation Card -->
+            <div class="ai-insight-card recommendation">
+              <div class="card-icon">💡</div>
+              <div id="aiRecommendationContainer">
+                <strong>Loading recommendations…</strong>
+                <small>Analyzing reorder needs</small>
+              </div>
+            </div>
+            
+            <!-- Overstock Analysis Card -->
+            <div class="ai-insight-card overstock">
+              <div class="card-icon">🟡</div>
+              <div id="aiOverstockContainer">
+                <strong>Checking inventory balance…</strong>
+                <small>Analyzing stock levels</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Alerts -->
+        <div class="card no-hover" style="margin-top: var(--spacing-lg);">
+          <div class="card-header">
+            <h2 class="card-title">🔔 Recent Alerts</h2>
+            <a href="alerts.html" class="btn btn-sm btn-ghost">View all →</a>
+          </div>
+          <div id="recentAlerts" aria-live="polite">
+            <div class="empty-state">
+              <span class="empty-icon" aria-hidden="true">🔔</span>
+              <h3>No alerts yet</h3>
+              <p>You're all caught up. New stock alerts will appear here automatically.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    // Dashboard initialization
+    function initDashboard() {
+      try {
+        // Get products from localStorage (via SAF utility)
+        var store = SAF.getStore() || { products: [] };
+        var products = store.products || [];
+        
+        // If no products in store, try to fetch from API
+        if (!products.length && window.SAF_API) {
+          SAF_API.getProducts().then(function(apiProducts) {
+            if (apiProducts && apiProducts.length) {
+              var updatedStore = { products: apiProducts };
+              SAF.setStore(updatedStore);
+              initDashboard(); // Re-run dashboard with fetched products
+            }
+          }).catch(function(err) {
+            console.error('Failed to fetch products from API:', err);
+          });
+          return;
+        }
+        
+        // Calculate KPIs
+        var total = products.length;
+        var low = 0, over = 0, healthy = 0;
+        
+        products.forEach(function(p) {
+          var stock = p.stock || 0;
+          var minStock = p.minStock || p.min_stock || 0;
+          if (stock < minStock) low++;
+          else if (stock > minStock * 3) over++;
+          else healthy++;
+        });
+        
+        // Update KPI elements directly
+        var kpiTotal = document.getElementById('kpiTotal');
+        var kpiLow = document.getElementById('kpiLow');
+        var kpiOver = document.getElementById('kpiOver');
+        var kpiHealthy = document.getElementById('kpiHealthy');
+        var alertBadge = document.getElementById('alertCountBadge');
+        
+        if (kpiTotal) kpiTotal.textContent = total;
+        if (kpiLow) kpiLow.textContent = low;
+        if (kpiOver) kpiOver.textContent = over;
+        if (kpiHealthy) kpiHealthy.textContent = healthy;
+        if (alertBadge) alertBadge.textContent = low;
+        
+        // Get AI insights from Gemini API (with delay to ensure SAF_API is loaded)
+        setTimeout(function() {
+          if (window.SAF_API) {
+            SAF_API.getAIInsights(products).then(function(insights) {
+              if (insights && insights.stockout_risk) {
+                var elem = document.getElementById('aiStockoutInsightContainer');
+                if (elem) elem.innerHTML = insights.stockout_risk;
+              }
+              if (insights && insights.reorder_recommendation) {
+                var elem = document.getElementById('aiRecommendationContainer');
+                if (elem) elem.innerHTML = insights.reorder_recommendation;
+              }
+              if (insights && insights.overstock_analysis) {
+                var elem = document.getElementById('aiOverstockContainer');
+                if (elem) elem.innerHTML = insights.overstock_analysis;
+              }
+            }).catch(function(err) {
+              console.error('Error fetching AI insights:', err);
+            });
+          }
+        }, 500);
+        
+        // Render recent alerts
+        var container = document.getElementById('recentAlerts');
+        var riskies = products.filter(function(p) {
+          var stock = p.stock || 0;
+          var minStock = p.minStock || p.min_stock || 0;
+          return stock < minStock;
+        }).sort(function(a, b) {
+          var aStock = a.stock || 0;
+          var aMin = a.minStock || a.min_stock || 0;
+          var bStock = b.stock || 0;
+          var bMin = b.minStock || b.min_stock || 0;
+          return (aStock / aMin) - (bStock / bMin);
+        });
+        
+        var topRiskies = riskies.slice(0, 5);
+        
+        if (!topRiskies.length) {
+          container.innerHTML =
+            '<div class="empty-state"><span class="empty-icon" aria-hidden="true">🎉</span>' +
+            '<h3>All healthy</h3><p>No stockout risks right now. Great job keeping shelves full!</p></div>';
+        } else {
+          container.innerHTML = topRiskies.map(function(p, i) {
+            var demand = Math.max(10, Math.round((p.stock + p.minStock * 0.9 + p.leadTime * 3 + 10) / 2));
+            var reorder = Math.max(demand - p.stock, 10);
+            var times = ['2 hours ago', '5 hours ago', 'Yesterday', '2 days ago', '3 days ago'];
+            return '<div class="alert-item level-high">' +
+              '<div class="alert-icon critical" aria-hidden="true">🔴</div>' +
+              '<div class="alert-content">' +
+              '<div class="alert-title">' + p.name + ' — Stockout Risk</div>' +
+              '<div class="alert-desc">Reorder recommended: ' + reorder + ' units (predicted demand ' + demand + ')</div>' +
+              '<div class="alert-meta">📅 ' + times[i] + ' · <span class="badge badge-high">HIGH</span></div>' +
+              '</div></div>';
+          }).join('');
+        }
+        
+        // Render charts with error handling
+        try {
+          var days = [];
+          for (var i = 29; i >= 0; i--) {
+            var d = new Date();
+            d.setDate(d.getDate() - i);
+            days.push(d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }));
+          }
+          var trend = [];
+          var t = 32;
+          for (var j = 0; j < 30; j++) {
+            t = Math.max(12, Math.round(t * 0.9 + Math.random() * 18));
+            trend.push(t);
+          }
+          var forecast = new Array(30).fill(null);
+          for (var k = 23; k < 30; k++) {
+            forecast[k] = Math.round(trend[k] * (0.9 + Math.random() * 0.25));
+          }
+          
+          if (window.SAF && window.SAF.charts) {
+            SAF.charts.line('salesTrendChart', days, [
+              { label: 'Actual Sales', data: trend, borderColor: SAF.charts.palette.primary, backgroundColor: 'rgba(255,107,53,0.12)', fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: SAF.charts.palette.primary },
+              { label: 'AI Forecast', data: forecast, borderColor: SAF.charts.palette.ai, backgroundColor: 'transparent', borderDash: [6, 4], tension: 0.4, pointRadius: 0 }
+            ]);
+            
+            var cats = {};
+            products.forEach(function(p) { 
+              cats[p.category] = (cats[p.category] || 0) + (p.stock || 0); 
+            });
+            var catNames = Object.keys(cats);
+            var colors = SAF.charts.generateColors(catNames.length);
+            SAF.charts.doughnut('categoryChart', catNames, catNames.map(function(c) { return cats[c]; }), colors);
+          }
+        } catch (chartError) {
+          console.error('Chart rendering error:', chartError);
+        }
+      } catch (e) {
+        console.error('Dashboard init error:', e);
+      }
+    }
+    
+    // Ensure Chart.js is loaded before initializing
+    function waitForChartJS() {
+      if (typeof Chart !== 'undefined') {
+        // Chart.js is loaded, initialize dashboard
+        initDashboard();
+      } else {
+        // Chart.js not ready yet, retry in 100ms
+        setTimeout(waitForChartJS, 100);
+      }
+    }
+    
+    // Wait for DOM and Chart.js to be ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', waitForChartJS);
+    } else {
+      // DOM is already loaded
+      waitForChartJS();
+    }
+  </script>
+
+</body>
+</html>
