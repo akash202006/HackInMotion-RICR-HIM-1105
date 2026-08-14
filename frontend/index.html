@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SMART AI FORECASTING - AI-powered inventory and demand forecasting for small retailers. Predict demand, prevent stockouts, sell smarter.">
+  <title>SMART AI FORECASTING - Predict Demand. Prevent Stockouts. Sell Smarter.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#features">Skip to features</a>
+
+  <!-- ======= Navigation Bar ======= -->
+  <nav class="landing-nav" aria-label="Primary navigation">
+    <a href="index.html" class="landing-brand" aria-label="SMART AI FORECASTING home">
+      <img src="logo.svg" alt="" class="logo-icon" style="width: 32px; height: 32px;">
+      <span>SMART AI FORECASTING</span>
+    </a>
+    <div class="landing-links">
+      <a href="#hero">Home</a>
+      <a href="#forecast-overview">Forecast</a>
+      <a href="#features">Features</a>
+      <a href="#about">About</a>
+    </div>
+    <div class="landing-cta">
+      <a class="btn btn-primary" href="auth.html">🚀 Live Demo</a>
+    </div>
+  </nav>
+
+  <main id="main">
+    <!-- ======= Hero + Forecast Overview Chart ======= -->
+    <section id="hero" style="padding: var(--spacing-3xl) var(--spacing-2xl); max-width: 1280px; margin: 0 auto;">
+
+      <!-- Hero Text -->
+      <div class="fade-in-up" style="text-align:center; max-width: 720px; margin: 0 auto var(--spacing-2xl);">
+        <h1 style="font-size:var(--font-4xl); font-weight:800; color:var(--dark); line-height:1.15; margin-bottom:var(--spacing-md);">Predict Demand. <span class="grad">Prevent Stockouts.</span> Sell Smarter.</h1>
+        <p class="tagline" style="font-size:var(--font-lg); color:var(--gray); margin-bottom:var(--spacing-lg); max-width:600px; margin-left:auto; margin-right:auto;">SMART AI FORECASTING uses intelligent algorithms to analyze your sales data, forecast future demand, and tell you exactly when to reorder &mdash; so you never lose a sale to an empty shelf.</p>
+        <div class="flex" style="flex-wrap:wrap; justify-content:center; margin-bottom:var(--spacing-xl);">
+          <a class="btn btn-primary" href="auth.html">&#x1F4CA; Explore Dashboard</a>
+          <a class="btn btn-outline" href="#features">Learn More</a>
+        </div>
+        <div class="hero-stats" style="justify-content:center;">
+          <div class="hero-stat"><div class="num">92%</div><div class="lbl">Forecast accuracy</div></div>
+          <div class="hero-stat"><div class="num">-35%</div><div class="lbl">Stockout rate</div></div>
+          <div class="hero-stat"><div class="num">15 min</div><div class="lbl">Setup time</div></div>
+        </div>
+      </div>
+
+      <!-- Forecast Overview Chart (full width, rectangular) -->
+      <div class="fade-in-up delay-1" id="forecast-overview">
+        <div class="card no-hover" style="padding: var(--spacing-lg);">
+          <div class="card-header">
+            <h2 class="card-title">&#x1F4C8; Forecast Overview</h2>
+            <span class="badge badge-ai">AI Powered</span>
+          </div>
+          <div class="chart-box hero-chart" role="img" aria-label="Forecast overview chart showing sales trend and AI predicted demand">
+            <canvas id="overviewChart"></canvas>
+          </div>
+          <p class="form-hint mt-sm">Last 30 days of sales with the next 7 days predicted by the AI model</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======= Features ======= -->
+    <section id="features" style="padding: var(--spacing-3xl) var(--spacing-2xl); max-width: 1280px; margin: 0 auto;">
+      <h2 class="text-2xl text-bold" style="text-align: center; margin-bottom: var(--spacing-xs);">Everything you need to sell smarter</h2>
+      <p class="text-gray text-center" style="margin-bottom: var(--spacing-xl);">Four powerful tools, one simple dashboard. Built for non-technical store owners.</p>
+      <div class="feature-grid" style="max-width: 1000px; margin: 0 auto;">
+        <article class="feature-card">
+          <div class="f-icon orange" aria-hidden="true">📊</div>
+          <h3>AI Demand Forecasting</h3>
+          <p>Accurate predictions powered by intelligent demand models tuned for small retail.</p>
+        </article>
+        <article class="feature-card">
+          <div class="f-icon green" aria-hidden="true">🔔</div>
+          <h3>Smart Stock Alerts</h3>
+          <p>Get notified the moment a product is at risk of stockout or overstock.</p>
+        </article>
+        <article class="feature-card">
+          <div class="f-icon purple" aria-hidden="true">🤖</div>
+          <h3>FORECASTING AI Insights</h3>
+          <p>Plain-language recommendations that tell you exactly what to order and why.</p>
+        </article>
+        <article class="feature-card">
+          <div class="f-icon blue" aria-hidden="true">📈</div>
+          <h3>Simple CSV Upload</h3>
+          <p>Upload your sales history and get forecast results in seconds. No setup needed.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ======= About ======= -->
+    <section id="about" class="hero" style="background: var(--white);">
+      <div>
+        <h2 class="text-2xl text-bold" style="margin-bottom: var(--spacing-md);">Built for small retailers, store managers &amp; business owners</h2>
+        <p class="text-gray" style="margin-bottom: var(--spacing-lg); max-width: 520px;">You don't need to be a data scientist. Upload your sales file, pick a product, and let the system tell you how much to stock, when to reorder, and what's at risk.</p>
+        <div style="display:flex; gap: var(--spacing-md); flex-wrap: wrap;">
+          <a class="btn btn-primary" href="auth.html">🚀 Explore Dashboard</a>
+          <a class="btn btn-outline" href="#forecast-overview">View Forecast Graph</a>
+        </div>
+      </div>
+      <div class="feature-card" style="background: linear-gradient(135deg, #F5F3FF, #FFFFFF);">
+        <div class="f-icon purple" aria-hidden="true" style="margin-bottom: var(--spacing-md);">🤖</div>
+        <h3>How it works</h3>
+        <ol class="text-gray" style="padding-left: var(--spacing-lg);">
+          <li style="margin-bottom: var(--spacing-sm);"><strong class="text-dark" style="color: var(--dark);">Upload</strong> your sales history (CSV)</li>
+          <li style="margin-bottom: var(--spacing-sm);"><strong class="text-dark" style="color: var(--dark);">Forecast</strong> — the AI predicts future demand</li>
+          <li style="margin-bottom: var(--spacing-sm);"><strong class="text-dark" style="color: var(--dark);">Act</strong> — get reorder recommendations &amp; alerts</li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <!-- ======= Footer ======= -->
+  <footer class="landing-footer">
+    <div class="footer-brand">🎯 SMART AI FORECASTING</div>
+    <p>"Predict Demand. Prevent Stockouts. Sell Smarter."</p>
+    <p class="mt-sm text-xs">© 2026 SMART AI FORECASTING · Powered by RICR-HIM-1105</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    /* ---------- Forecast Overview chart ---------- */
+    (function () {
+      var days = [];
+      for (var i = 36; i >= 0; i--) {
+        var d = new Date();
+        d.setDate(d.getDate() - i);
+        days.push(d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }));
+      }
+
+      var actual = [];
+      var t = 30;
+      for (var j = 0; j < 30; j++) {
+        t = Math.max(10, Math.round(t * 0.92 + Math.random() * 16));
+        actual.push(t);
+      }
+
+      var forecast = new Array(30).fill(null);
+      for (var k = 30; k < 37; k++) {
+        forecast.push(Math.round(t * (0.95 + Math.random() * 0.2)));
+        t = forecast[forecast.length - 1];
+      }
+
+      var ctx = document.getElementById('overviewChart');
+      if (ctx && typeof Chart !== 'undefined') {
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: days,
+            datasets: [
+              {
+                label: 'Actual Sales',
+                data: actual,
+                borderColor: '#FF6B35',
+                backgroundColor: 'rgba(255,107,53,0.12)',
+                fill: true,
+                tension: 0.4,
+                pointRadius: 3,
+                pointBackgroundColor: '#FF6B35'
+              },
+              {
+                label: 'AI Forecast',
+                data: forecast,
+                borderColor: '#7C3AED',
+                backgroundColor: 'rgba(124,58,237,0.12)',
+                borderDash: [6, 4],
+                fill: true,
+                tension: 0.4,
+                pointRadius: 4,
+                pointBackgroundColor: '#7C3AED'
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+              legend: { labels: { color: '#718096', font: { family: 'Inter, sans-serif', size: 12 }, usePointStyle: true } }
+            },
+            scales: {
+              x: { grid: { color: 'rgba(226,232,240,0.5)' }, ticks: { color: '#A0AEC0', maxTicksLimit: 8 } },
+              y: { grid: { color: 'rgba(226,232,240,0.5)' }, ticks: { color: '#A0AEC0' }, beginAtZero: true }
+            },
+            animation: { duration: 900, easing: 'easeOutQuart' }
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
