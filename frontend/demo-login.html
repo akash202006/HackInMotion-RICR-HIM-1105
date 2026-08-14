@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SMART AI FORECASTING - Demo Login</title>
+  <script>
+    // Set demo user session
+    var demoUser = {
+      name: "Demo User",
+      email: "demo.user@test.com",
+      store: "Demo Store",
+      role: "Store Manager",
+      id: "cd5eb6f6-f7e2-4b9d-b3f3-1e7f82960d46",
+      loginTime: Date.now()
+    };
+    
+    var demoToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjZDVlYjZmNi1mN2UyLTRiOWQtYjNmMy0xZTdmODI5NjBkNDYiLCJlbWFpbCI6ImRlbW8udXNlckB0ZXN0LmNvbSIsImV4cCI6MTc4NjgwMDUzM30.ZHkxSbe1NRGKUtjpn7GzIj";
+    
+    // Store in localStorage
+    localStorage.setItem('saf_user', JSON.stringify(demoUser));
+    localStorage.setItem('saf_auth_token', demoToken);
+    
+    // Redirect to dashboard
+    window.location.href = 'dashboard.html';
+  </script>
+</head>
+<body>
+  <p>Logging in... Redirecting to dashboard...</p>
+</body>
+</html>
